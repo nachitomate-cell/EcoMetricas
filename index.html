@@ -960,6 +960,9 @@
       <div class="nav-item" id="nav-vinamed" onclick="switchWorkspace('vinamed')">
         <span class="nav-icon">🏥</span> ViñaMed
       </div>
+      <div class="nav-item" id="nav-reconciliation" onclick="switchWorkspace('reconciliation')">
+        <span class="nav-icon">🔍</span> Conciliación
+      </div>
 
       <div style="margin: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);"></div>
 
@@ -988,6 +991,7 @@
       <div id="subnav">
         <button class="btn-subnav active" id="subnav-main" onclick="switchSubTab('main')">📊 Panel Principal</button>
         <button class="btn-subnav" id="subnav-history" onclick="switchSubTab('history')">📅 Historial Mensual</button>
+        <button class="btn-subnav" id="subnav-reconciliation" onclick="switchSubTab('reconciliation')">🔍 Conciliación</button>
         <button class="btn-subnav" id="subnav-control" onclick="switchSubTab('control')">⚠️ Control de Errores</button>
       </div>
 
@@ -1230,7 +1234,102 @@
         </div>
       </div>
 
-      <div id="view-config" class="view-section">
+      <div id="view-reconciliation" class="view-section">
+        <div class="panel-title"
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <div>
+            <h1 class="title">Conciliación Financiera</h1>
+            <p class="copy">Auditoría cruzada: HIS (Registro Diario) vs Liquidación del Centro.</p>
+          </div>
+          <div class="row">
+            <div class="field" style="flex-direction: row; align-items: center; gap: 0.5rem; margin: 0;">
+              <label style="white-space: nowrap;">Nivel Fonasa:</label>
+              <select id="recon-fonasa-level" onchange="runReconciliation()" style="width: auto; padding: 0.3rem 0.6rem;">
+                <option value="1">Nivel 1</option>
+                <option value="2">Nivel 2</option>
+              </select>
+            </div>
+            <div class="field" style="flex-direction: row; align-items: center; gap: 0.5rem; margin: 0;">
+              <label style="white-space: nowrap;">Impuestos:</label>
+              <select id="recon-tax-type" onchange="runReconciliation()" style="width: auto; padding: 0.3rem 0.6rem;">
+                <option value="bruto">Bruto (100%)</option>
+                <option value="neto">Líquido (~13.75% ret.)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-top" style="grid-template-columns: 1fr 1fr; margin-bottom: 1.5rem;">
+          <div class="upload" id="upload-his" style="border-style: solid; background: #fff;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+            <h3 style="font-weight: 600;">Cargar Reporte HIS</h3>
+            <p class="subtle">Registro Diario Profesional</p>
+            <input type="file" id="input-his" accept=".csv,.xlsx,.xls" onchange="processReconFile(this, 'his')" />
+            <div id="status-his" class="chip" style="margin-top: 0.5rem; display: none;">Archivo cargado</div>
+          </div>
+          <div class="upload" id="upload-report" style="border-style: solid; background: #fff;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
+            <h3 style="font-weight: 600;">Cargar Liquidación</h3>
+            <p class="subtle">Reporte Mensual del Centro</p>
+            <input type="file" id="input-report" accept=".csv,.xlsx,.xls" onchange="processReconFile(this, 'report')" />
+            <div id="status-report" class="chip" style="margin-top: 0.5rem; display: none;">Archivo cargado</div>
+          </div>
+        </div>
+
+        <div id="recon-dashboard" style="display: none;">
+          <div class="metrics">
+            <div class="metric">
+              <div class="metric-label">Conciliado</div>
+              <div class="metric-value" id="recon-total-ok" style="color: var(--teal);">$0</div>
+              <div class="metric-sub" id="recon-count-ok">0 registros</div>
+            </div>
+            <div class="metric amber">
+              <div class="metric-label">Diferencia Tarifa</div>
+              <div class="metric-value" id="recon-total-diff">$0</div>
+              <div class="metric-sub" id="recon-count-diff">0 registros</div>
+            </div>
+            <div class="metric burnt">
+              <div class="metric-label">Fugas (No pagado)</div>
+              <div class="metric-value" id="recon-total-leak" style="color: var(--red);">$0</div>
+              <div class="metric-sub" id="recon-count-leak">0 registros</div>
+            </div>
+            <div class="metric ink">
+              <div class="metric-label">Excedentes</div>
+              <div class="metric-value" id="recon-total-extra">$0</div>
+              <div class="metric-sub" id="recon-count-extra">0 registros</div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 1.5rem;">
+            <div class="panel-title" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <h3 class="section-title" style="margin: 0;">Detalle de Auditoría</h3>
+              <div class="row">
+                <button class="btn-soft" onclick="filterReconTable('all')">Todos</button>
+                <button class="btn-danger" onclick="filterReconTable('leak')">Fugas</button>
+                <button class="btn-ghost" onclick="filterReconTable('diff')">Diferencias</button>
+                <button class="btn" onclick="saveReconciliationReport()">💾 Guardar Totales</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Estado</th>
+                    <th>Paciente</th>
+                    <th>Examen</th>
+                    <th>Financiador</th>
+                    <th>Esperado</th>
+                    <th>Pagado</th>
+                    <th>Diferencia</th>
+                  </tr>
+                </thead>
+                <tbody id="recon-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
         <div class="card" style="background: var(--teal-soft); border-color: var(--teal); margin-bottom: 1.5rem;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 1rem;">
             <div>
@@ -1381,7 +1480,8 @@
       activeSubTab: 'main',
       selectedMonth: currentMonth(),
       medicenter: { settings: { percent: 37, monthlyGoal: 0, workDays: [1, 2, 3, 4, 5, 6], priceRules: clone(DEFAULT_RULES_N1), columnMap: clone(DEFAULT_MAP) }, history: [], currentRows: [], currentSummary: null, currentDiscardStats: emptyDiscardStats(), currentFileName: '' },
-      vinamed: { settings: { percent: 100, monthlyGoal: 0, workDays: [1, 2, 3, 4, 5, 6], priceRules: clone(DEFAULT_RULES_N2), columnMap: clone(DEFAULT_MAP) }, history: [], currentRows: [], currentSummary: null, currentDiscardStats: emptyDiscardStats(), currentFileName: '' }
+      vinamed: { settings: { percent: 100, monthlyGoal: 0, workDays: [1, 2, 3, 4, 5, 6], priceRules: clone(DEFAULT_RULES_N2), columnMap: clone(DEFAULT_MAP) }, history: [], currentRows: [], currentSummary: null, currentDiscardStats: emptyDiscardStats(), currentFileName: '' },
+      reconciliation: { hisData: null, reportData: null, results: null, fonasaLevel: 1, isNet: false }
     };
 
     const UI = {
@@ -1542,6 +1642,10 @@
         document.getElementById('view-config').classList.add('active');
         document.getElementById('config-center-select').value = APP_STATE.activeWorkspace;
         renderConfig();
+      } else if (workspace === 'reconciliation') {
+        header.style.display = 'none'; subnav.style.display = 'none';
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.getElementById('view-reconciliation').classList.add('active');
       } else {
         header.style.display = 'flex'; subnav.style.display = 'flex';
         APP_STATE.activeWorkspace = workspace;
@@ -1880,50 +1984,213 @@
       showToast("PDF Generado exitosamente");
     }
 
-    // ==== HELPERS Y CÁLCULOS ====
-    function getEntriesForMonth(month) { return getState().history.filter(e => monthFromDate(e.workDate) === month) }
-    function summarizeMonth(entries) {
-      const examStats = {}; let totalBase = 0, totalPayment = 0, totalRows = 0;
-      entries.forEach(e => {
-        totalBase += e.totalBase; totalPayment += e.totalPayment; totalRows += e.totalRows;
-        e.rows.forEach(r => {
-          if (r.matched) {
-            if (!examStats[r.label]) examStats[r.label] = { count: 0, base: 0, payment: 0 };
-            examStats[r.label].count += 1; examStats[r.label].base += r.base; examStats[r.label].payment += calcPayment(r.base, e.paymentPercent);
-          }
-        })
-      });
-      return { totalBase, totalPayment, totalRows, sortedExams: Object.entries(examStats).sort((a, b) => b[1].payment - a[1].payment).map(e => ({ label: e[0], count: e[1].count, base: e[1].base, payment: e[1].payment })) }
-    }
-    function buildSessionSummary(rows, fileName, workDate, paymentPercent, discardStats) { const totalBase = rows.reduce((s, r) => s + r.base, 0); const totalPayment = rows.reduce((s, r) => s + calcPayment(r.base, paymentPercent), 0); const examFrequency = {}; const unmatchedMap = {}; rows.forEach(r => { if (r.matched) examFrequency[r.label] = (examFrequency[r.label] || 0) + 1; else unmatchedMap[r.examenRaw] = (unmatchedMap[r.examenRaw] || 0) + 1 }); const sortedExams = Object.entries(examFrequency).sort((a, b) => b[1] - a[1]).map(e => ({ label: e[0], count: e[1] })); const unmatchedEntries = Object.entries(unmatchedMap).sort((a, b) => b[1] - a[1]).map(e => ({ label: e[0], count: e[1] })); return { id: uid(), fileName, workDate, paymentPercent, totalBase, totalPayment, totalRows: rows.length, rows, sortedExams, unmatchedEntries, discardStats } }
-    function projectMonth(totalPayment, dayCount, month) { if (!dayCount) return 0; const [year, monthNumber] = month.split('-').map(Number); const daysInMonth = new Date(year, monthNumber, 0).getDate(); const cutoff = month === currentMonth() ? new Date().getDate() : daysInMonth; return (totalPayment / dayCount) * cutoff; }
-    function computeMissingDates(entries, month) {
-      const [year, monthNumber] = month.split('-').map(Number); if (!year || !monthNumber) return [];
-      const lastDay = month === currentMonth() ? new Date().getDate() : new Date(year, monthNumber, 0).getDate();
-      const loaded = new Set(entries.map(e => e.workDate)); const missing = []; const workDays = getState().settings.workDays || [1, 2, 3, 4, 5, 6];
-      for (let day = 1; day <= lastDay; day++) {
-        const date = `${year}-${String(monthNumber).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const jsDate = new Date(`${date}T12:00:00`);
-        if (!workDays.includes(jsDate.getDay())) continue;
-        if (!loaded.has(date)) missing.push(date);
-      }
-      return missing;
+    // ==== MÓDULO DE CONCILIACIÓN FINANCIERA ====
+    const arancelFonasa2026 = {
+      "ECOTOMOGRAFIA ABDOMINAL(INCLUYE HIGADO, VIA BILIAR, ETC)": { nivel1: 27570, nivel2: 35840 },
+      "ECOGRAFIA PELVICA MASCULINA (INCLUYE VEJIGA Y PROSTATA)": { nivel1: 15330, nivel2: 19930 },
+      "ECOTOMOGRAFIA RENAL (BILATERAL), O DE BAZO": { nivel1: 19110, nivel2: 24840 },
+      "ECOGRAFIA TIROIDEA": { nivel1: 19210, nivel2: 24970 },
+      "DE PARTES BLANDAS": { nivel1: 19210, nivel2: 24970 },
+      "ECOTOMOGRAFIA MAMARIA BILATERAL": { nivel1: 19210, nivel2: 24970 }
+    };
+
+    function normalizeMedName(s) {
+      if (!s) return "";
+      let n = String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+      // Estandarización solicitada por el usuario
+      n = n.replace(/ECOTOMOGRAFIA|ECOGRAFIA|ECO/g, 'ECO');
+      n = n.replace(/TRANSVAGINAL|T\.V\.|ENDOVAGINAL/g, 'TV');
+      n = n.replace(/PELVICA|PELVIANA/g, 'PELVICA');
+      n = n.replace(/DOPPLER|DOPLER/g, 'DOPPLER');
+      return n.replace(/\s+/g, ' ').trim();
     }
 
-    function compileRules(rules) { return rules.map(r => ({ ...r, regex: new RegExp(r.aliases.split('|').map(a => String(a).trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).filter(Boolean).join('|'), 'i') })) }
-    function resolveExam(name, rules) { const n = String(name).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase(); for (const r of rules) { if (r.regex.test(n)) return { label: r.label, base: Number(r.base) || 0, matched: true } } return { label: 'Sin tarifa', base: 0, matched: false } }
-    function escapeAttribute(v) { return escapeHtml(v).replace(/"/g, '&quot;') }
-    function escapeHtml(v) { return String(v || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
-    function todayISO() { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}` }
-    function currentMonth() { return todayISO().slice(0, 7) }
-    function monthFromDate(v) { return String(v || '').slice(0, 7) }
-    function sanitizePercent(v, f) { const n = Number(v); return Number.isFinite(n) ? Math.min(100, Math.max(0, n)) : f }
-    function sanitizeMoney(v, f) { const n = Number(v); return Number.isFinite(n) ? Math.max(0, Math.round(n)) : f }
-    function calcPayment(base, percent) { return Math.round((Number(base) || 0) * sanitizePercent(percent, 100) / 100) }
-    function fmtCLP(v) { return '$' + Math.round(Number(v) || 0).toLocaleString('es-CL') }
-    function formatPercent(v) { return `${Number(v).toLocaleString('es-CL', { maximumFractionDigits: 1 })}%` }
-    function prettyDate(s) { if (!s) return '-'; const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric' }) }
-    function prettyMonth(s) { if (!s) return ''; const [y, m] = s.split('-').map(Number); return new Date(y, m - 1, 1).toLocaleDateString('es-CL', { month: 'long', year: 'numeric' }) }
+    function processReconFile(input, type) {
+      const file = input.files[0];
+      if (!file) return;
+      const ext = file.name.split('.').pop().toLowerCase();
+      
+      const handleData = (data) => {
+        APP_STATE.reconciliation[type + 'Data'] = data;
+        document.getElementById('status-' + type).style.display = 'inline-block';
+        document.getElementById('status-' + type).textContent = file.name;
+        showToast(`Archivo ${type.toUpperCase()} cargado.`, "ok");
+        if (APP_STATE.reconciliation.hisData && APP_STATE.reconciliation.reportData) {
+          runReconciliation();
+        }
+      };
+
+      if (ext === 'csv') {
+        Papa.parse(file, { skipEmptyLines: true, complete: r => handleData(r.data) });
+      } else {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          handleData(XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' }));
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    }
+
+    function runReconciliation() {
+      const his = APP_STATE.reconciliation.hisData;
+      const report = APP_STATE.reconciliation.reportData;
+      if (!his || !report) return;
+
+      const fonasaLevel = document.getElementById('recon-fonasa-level').value;
+      const isNet = document.getElementById('recon-tax-type').value === 'neto';
+      const profitPercent = getState().settings.percent || 30; // 30% por defecto si no hay nada
+      const taxFactor = isNet ? 0.8625 : 1.0; // Simulando retención ~13.75%
+
+      // 1. Mapear HIS (Filtro Fin de Atención)
+      const hisMap = {}; // Key: Paciente|Examen
+      const hisHeaders = his[0].map(h => normalizeStr(h));
+      const idxH = {
+        paciente: hisHeaders.findIndex(h => h.includes('paciente') || h.includes('social')),
+        examen: hisHeaders.findIndex(h => h.includes('examen') || h.includes('prestacion')),
+        estado: hisHeaders.findIndex(h => h.includes('estado'))
+      };
+
+      his.slice(1).forEach(row => {
+        const estado = normalizeStr(row[idxH.estado]);
+        if (!estado.includes('fin de atencion')) return;
+        const key = normalizeMedName(row[idxH.paciente]) + '|' + normalizeMedName(row[idxH.examen]);
+        if (!hisMap[key]) hisMap[key] = [];
+        hisMap[key].push({ paciente: row[idxH.paciente], examen: row[idxH.examen] });
+      });
+
+      // 2. Mapear Reporte Mensual
+      const reportHeaders = report[0].map(h => normalizeStr(h));
+      const idxR = {
+        paciente: reportHeaders.findIndex(h => h.includes('paciente')),
+        examen: reportHeaders.findIndex(h => h.includes('examen')),
+        financiador: reportHeaders.findIndex(h => h.includes('financiador')),
+        valor: reportHeaders.findIndex(h => h.includes('valor')),
+        apago: reportHeaders.findIndex(h => h.includes('pago'))
+      };
+
+      const results = { ok: [], diff: [], leak: [], extra: [] };
+      const matchedKeys = new Set();
+
+      report.slice(1).forEach(row => {
+        const pacRaw = row[idxR.paciente];
+        const exRaw = row[idxR.examen];
+        const key = normalizeMedName(pacRaw) + '|' + normalizeMedName(exRaw);
+        const financiador = String(row[idxR.financiador] || '').toUpperCase();
+        const pagado = Number(row[idxR.apago]) || 0;
+        
+        // Calcular Esperado
+        let esperado = 0;
+        if (financiador.includes('FONASA')) {
+          const arancelKey = Object.keys(arancelFonasa2026).find(k => normalizeMedName(exRaw).includes(normalizeMedName(k)));
+          const base = arancelKey ? arancelFonasa2026[arancelKey]['nivel' + fonasaLevel] : pagado; // Si no hay arancel, asumimos lo pagado como base para no alarmar s.s.
+          esperado = Math.round((base * profitPercent / 100) * taxFactor);
+        } else {
+          esperado = pagado; // Otros financiadores no tenemos arancel base en la consulta
+        }
+
+        const diff = pagado - esperado;
+        const record = { paciente: pacRaw, examen: exRaw, financiador, esperado, pagado, diff };
+
+        if (hisMap[key] && hisMap[key].length > 0) {
+          hisMap[key].shift(); // Consumir un registro del HIS
+          matchedKeys.add(key);
+          if (Math.abs(diff) <= 100) {
+            results.ok.push(record);
+          } else {
+            results.diff.push(record);
+          }
+        } else {
+          results.extra.push(record);
+        }
+      });
+
+      // 3. Detectar Fugas (Lo que quedó en HIS y no se emparejó)
+      Object.entries(hisMap).forEach(([key, items]) => {
+        items.forEach(item => {
+          results.leak.push({ paciente: item.paciente, examen: item.examen, financiador: 'N/A', esperado: 0, pagado: 0, diff: 0 });
+        });
+      });
+
+      APP_STATE.reconciliation.results = results;
+      renderReconciliation();
+    }
+
+    function renderReconciliation() {
+      const r = APP_STATE.reconciliation.results;
+      if (!r) return;
+
+      document.getElementById('recon-dashboard').style.display = 'block';
+      
+      const sum = (arr, key) => arr.reduce((s, x) => s + (x[key] || 0), 0);
+      
+      setText('recon-total-ok', fmtCLP(sum(r.ok, 'pagado')));
+      setText('recon-count-ok', `${r.ok.length} registros`);
+      
+      setText('recon-total-diff', fmtCLP(Math.abs(sum(r.diff, 'diff'))));
+      setText('recon-count-diff', `${r.diff.length} registros`);
+      
+      // Para fugas, estimamos la pérdida. Como no sabemos el valor, podrías usar un promedio.
+      // Por ahora solo conteo o si quieres, un valor base.
+      setText('recon-total-leak', `${r.leak.length} fugas`);
+      setText('recon-count-leak', 'Atenciones no pagadas');
+      
+      setText('recon-total-extra', fmtCLP(sum(r.extra, 'pagado')));
+      setText('recon-count-extra', `${r.extra.length} registros`);
+
+      filterReconTable('all');
+    }
+
+    function filterReconTable(filter) {
+      const r = APP_STATE.reconciliation.results;
+      const tbody = document.getElementById('recon-tbody');
+      let data = [];
+      if (filter === 'all') data = [...r.ok, ...r.diff, ...r.leak, ...r.extra];
+      else if (filter === 'leak') data = r.leak;
+      else if (filter === 'diff') data = r.diff;
+
+      tbody.innerHTML = data.map(i => {
+        let statusClass = "pill value";
+        let statusText = "OK";
+        if (r.leak.includes(i)) { statusClass = "pill warn"; statusText = "FUGA"; }
+        if (r.diff.includes(i)) { statusClass = "pill warn"; statusText = "DIFERENCIA"; }
+        if (r.extra.includes(i)) { statusClass = "pill zero"; statusText = "EXCEDENTE"; }
+
+        return `<tr>
+          <td><span class="${statusClass}">${statusText}</span></td>
+          <td>${escapeHtml(i.paciente)}</td>
+          <td>${escapeHtml(i.examen)}</td>
+          <td>${escapeHtml(i.financiador)}</td>
+          <td>${fmtCLP(i.esperado)}</td>
+          <td>${fmtCLP(i.pagado)}</td>
+          <td style="font-weight:bold; color:${i.diff < -100 ? 'var(--red)' : 'inherit'}">${fmtCLP(i.diff)}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    async function saveReconciliationReport() {
+      const r = APP_STATE.reconciliation.results;
+      if (!r || !CURRENT_USER) return;
+      
+      const stats = {
+        month: APP_STATE.selectedMonth,
+        center: APP_STATE.activeWorkspace,
+        date: todayISO(),
+        totalConciliado: r.ok.reduce((s, x) => s + x.pagado, 0),
+        fugasCount: r.leak.length,
+        diferenciasTotal: r.diff.reduce((s, x) => s + Math.abs(x.diff), 0),
+        excedentesTotal: r.extra.reduce((s, x) => s + x.pagado, 0)
+      };
+
+      try {
+        await db.collection("users").doc(CURRENT_USER.uid).collection("recon_history").add(stats);
+        showToast("Reporte estadístico guardado en la nube.", "ok");
+      } catch (e) {
+        showToast("Error al guardar histórico.", "error");
+      }
+    }
+
     function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
   </script>
 </body>
