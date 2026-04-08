@@ -1499,51 +1499,27 @@
     let isOffline = !navigator.onLine;
 
     // ==== SISTEMA DE AUTH, LISTA BLANCA Y MIGRACIÓN ====
+    // ==== SISTEMA DE AUTH DESHABILITADO PARA REVISIÓN ====
+    /*
     auth.onAuthStateChanged(async (user) => {
-      const loader = document.getElementById('cloud-loading');
-      if (user) {
-        CURRENT_USER = user;
-
-        try {
-          const whitelistRef = db.collection("app_data").doc("whitelist");
-          const whitelistSnap = await whitelistRef.get();
-          let isAllowed = false;
-
-          if (whitelistSnap.exists) {
-            const allowedEmails = whitelistSnap.data().emails || [];
-            if (allowedEmails.includes(user.email)) isAllowed = true;
-          } else {
-            await whitelistRef.set({ emails: [user.email] });
-            isAllowed = true;
-            showToast("¡Lista blanca inicializada con éxito!", "ok");
-          }
-
-          if (!isAllowed) {
-            document.getElementById('user-email-display').textContent = user.email;
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-layout').style.display = 'none';
-            document.getElementById('inactive-screen').style.display = 'flex';
-            loader.style.display = 'none';
-            return;
-          }
-        } catch (e) {
-          console.error("Error comprobando permisos", e);
-        }
-
-        document.getElementById('inactive-screen').style.display = 'none';
-        DOC_REF = db.collection("users").doc(user.uid);
-        document.getElementById('user-avatar').src = user.photoURL || '';
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('app-layout').style.display = 'flex';
-        await hydrateData();
-      } else {
-        CURRENT_USER = null;
-        document.getElementById('inactive-screen').style.display = 'none';
-        document.getElementById('login-screen').style.display = 'flex';
-        document.getElementById('app-layout').style.display = 'none';
-        loader.style.display = 'none';
-      }
+      ...
     });
+    */
+
+    // Bypass automático para revisión local/desarrollo
+    (async () => {
+      const loader = document.getElementById('cloud-loading');
+      // Simulamos un usuario para que las referencias a base de datos no fallen
+      CURRENT_USER = { uid: "revisor_temporal", email: "revisor@ecometricas.cl", photoURL: "" };
+      DOC_REF = db.collection("users").doc(CURRENT_USER.uid);
+      
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('inactive-screen').style.display = 'none';
+      document.getElementById('app-layout').style.display = 'flex';
+      
+      await hydrateData();
+      if(loader) loader.style.display = 'none';
+    })();
 
     function loginGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
