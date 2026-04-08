@@ -77,6 +77,7 @@
       justify-content: center;
       align-items: center;
       z-index: 100000;
+      display: none; /* Oculto por defecto para revisión */
     }
 
     .login-card {
@@ -110,7 +111,7 @@
 
     /* Layout App */
     #app-layout {
-      display: none;
+      display: flex; /* Cambiado de none a flex para revisión */
       width: 100%;
     }
 
@@ -1499,27 +1500,20 @@
     let isOffline = !navigator.onLine;
 
     // ==== SISTEMA DE AUTH, LISTA BLANCA Y MIGRACIÓN ====
+    // Simulamos un usuario para que las referencias a base de datos no fallen
+    const CURRENT_USER = { uid: "revisor_temporal", email: "revisor@ecometricas.cl", photoURL: "" };
+    const DOC_REF = db.collection("users").doc(CURRENT_USER.uid);
+    
+    // Ocultar loaders inmediatamente
+    setTimeout(() => {
+      const loader = document.getElementById('cloud-loading');
+      if(loader) loader.style.display = 'none';
+      if(typeof hydrateData === 'function') hydrateData();
+    }, 100);
+
     // ==== SISTEMA DE AUTH DESHABILITADO PARA REVISIÓN ====
     /*
     auth.onAuthStateChanged(async (user) => {
-      ...
-    });
-    */
-
-    // Bypass automático para revisión local/desarrollo
-    (async () => {
-      const loader = document.getElementById('cloud-loading');
-      // Simulamos un usuario para que las referencias a base de datos no fallen
-      CURRENT_USER = { uid: "revisor_temporal", email: "revisor@ecometricas.cl", photoURL: "" };
-      DOC_REF = db.collection("users").doc(CURRENT_USER.uid);
-      
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('inactive-screen').style.display = 'none';
-      document.getElementById('app-layout').style.display = 'flex';
-      
-      await hydrateData();
-      if(loader) loader.style.display = 'none';
-    })();
 
     function loginGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
