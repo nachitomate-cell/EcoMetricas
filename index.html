@@ -1412,7 +1412,8 @@
       projectId: "eco-metricas",
       storageBucket: "eco-metricas.firebasestorage.app",
       messagingSenderId: "556047242817",
-      appId: "1:556047242817:web:d81fc9070e2beeca7898c0"
+      appId: "1:556047242817:web:d81fc9070e2beeca7898c0",
+      measurementId: "G-5TBBKGFPQD"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -1515,7 +1516,8 @@
 
     // ==== SISTEMA DE AUTH DESHABILITADO PARA REVISIÓN ====
     /*
-    auth.onAuthStateChanged(async (user) => {
+    auth.onAuthStateChanged(async (user) => { ... });
+    */
 
     function loginGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -1529,7 +1531,8 @@
     async function hydrateData() {
       const loader = document.getElementById('cloud-loading');
       const retryBtn = document.getElementById('retry-btn');
-      loader.style.display = 'flex';
+      // No mostrar loader si es el bypass de revisión
+      if (CURRENT_USER.uid !== "revisor_temporal") loader.style.display = 'flex';
 
       const failTimer = setTimeout(() => {
         if (retryBtn) retryBtn.style.display = 'inline-flex';
