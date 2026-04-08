@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <title>Eco Métricas - SaaS</title>
+  <title>Eco MÃ©tricas - SaaS</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
@@ -77,7 +77,7 @@
       justify-content: center;
       align-items: center;
       z-index: 100000;
-      display: none; /* Oculto por defecto para revisión */
+      display: none; /* Oculto por defecto para revisiÃ³n */
     }
 
     .login-card {
@@ -111,7 +111,7 @@
 
     /* Layout App */
     #app-layout {
-      display: flex; /* Cambiado de none a flex para revisión */
+      display: flex; /* Cambiado de none a flex para revisiÃ³n */
       width: 100%;
     }
 
@@ -671,7 +671,7 @@
       }
     }
 
-    /* 🔥 OPTIMIZACIÓN MÓVIL (PWA) 🔥 */
+    /* ðŸ”¥ OPTIMIZACIÃ“N MÃ“VIL (PWA) ðŸ”¥ */
     @media(max-width:840px) {
       body {
         flex-direction: column;
@@ -893,23 +893,23 @@
 
 <body>
 
-  <div id="offline-banner">⚠️ SIN CONEXIÓN — Trabajando localmente. Se sincronizará al volver a estar online.</div>
+  <div id="offline-banner">âš ï¸ SIN CONEXIÃ“N â€” Trabajando localmente. Se sincronizarÃ¡ al volver a estar online.</div>
 
   <div id="cloud-loading">
     <div class="spinner"></div>
     <h2 style="font-family:'DM Serif Display'; font-size:1.5rem; color:var(--ink); margin:0;">Iniciando Sistema...</h2>
     <button id="retry-btn" class="btn-ghost" style="margin-top: 1rem; display: none;"
-      onclick="location.reload()">Reintentar conexión</button>
+      onclick="location.reload()">Reintentar conexiÃ³n</button>
   </div>
 
   <div class="modal-overlay" id="confirm-modal">
     <div class="modal-box">
-      <div style="font-size: 3rem; margin-bottom: 1rem;">🗑️</div>
-      <h2 class="title" style="font-size: 1.4rem;">¿Seguro que deseas borrar?</h2>
-      <p class="copy" style="margin-bottom: 1.5rem;" id="confirm-text">Esta acción no se puede deshacer.</p>
+      <div style="font-size: 3rem; margin-bottom: 1rem;">ðŸ—‘ï¸</div>
+      <h2 class="title" style="font-size: 1.4rem;">Â¿Seguro que deseas borrar?</h2>
+      <p class="copy" style="margin-bottom: 1.5rem;" id="confirm-text">Esta acciÃ³n no se puede deshacer.</p>
       <div class="row" style="justify-content: center; gap: 1rem;">
         <button class="btn-ghost" onclick="closeModal()">Cancelar</button>
-        <button class="btn-danger" id="confirm-yes-btn">Sí, borrar todo</button>
+        <button class="btn-danger" id="confirm-yes-btn">SÃ­, borrar todo</button>
       </div>
     </div>
   </div>
@@ -919,8 +919,8 @@
   <div id="login-screen">
     <div class="login-card">
       <div class="logo" style="justify-content: center; font-size: 2rem; margin-bottom: 1rem;"><span
-          class="logo-dot"></span>Eco Métricas</div>
-      <p class="copy" style="margin-bottom: 2rem;">Sistema de gestión financiera para Tecnólogos Médicos.</p>
+          class="logo-dot"></span>Eco MÃ©tricas</div>
+      <p class="copy" style="margin-bottom: 2rem;">Sistema de gestiÃ³n financiera para TecnÃ³logos MÃ©dicos.</p>
       <button class="google-btn" onclick="loginGoogle()">
         <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
           <path fill="#FFC107"
@@ -932,43 +932,43 @@
           <path fill="#1976D2"
             d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
         </svg>
-        Iniciar sesión con Google
+        Iniciar sesiÃ³n con Google
       </button>
     </div>
   </div>
 
   <div id="inactive-screen" style="display:none;">
     <div class="login-card">
-      <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
-      <h2 class="title" style="font-size: 1.6rem; color: var(--burnt);">Suscripción Inactiva</h2>
-      <p class="copy" style="margin-bottom: 0.5rem; font-size: 0.9rem;">El correo con el que intentaste ingresar no está
+      <div style="font-size: 3rem; margin-bottom: 1rem;">ðŸ”’</div>
+      <h2 class="title" style="font-size: 1.6rem; color: var(--burnt);">SuscripciÃ³n Inactiva</h2>
+      <p class="copy" style="margin-bottom: 0.5rem; font-size: 0.9rem;">El correo con el que intentaste ingresar no estÃ¡
         en la lista de usuarios autorizados:</p>
       <div id="user-email-display"
         style="font-family: 'DM Mono'; font-weight: bold; color: var(--teal); margin-bottom: 1.5rem; word-break: break-all;">
         correo@gmail.com</div>
-      <p class="copy" style="margin-bottom: 2rem; font-size: 0.85rem;">Para adquirir tu suscripción mensual o activar tu
+      <p class="copy" style="margin-bottom: 2rem; font-size: 0.85rem;">Para adquirir tu suscripciÃ³n mensual o activar tu
         cuenta, por favor contacta al administrador del sistema.</p>
-      <button class="btn-ghost" onclick="logout()" style="width: 100%;">Cerrar Sesión</button>
+      <button class="btn-ghost" onclick="logout()" style="width: 100%;">Cerrar SesiÃ³n</button>
     </div>
   </div>
 
   <div id="app-layout">
     <aside>
-      <div class="logo"><span class="logo-dot"></span>Eco Métricas</div>
+      <div class="logo"><span class="logo-dot"></span>Eco MÃ©tricas</div>
       <div class="nav-item active" id="nav-medicenter" onclick="switchWorkspace('medicenter')">
-        <span class="nav-icon">🏢</span> MediCenter
+        <span class="nav-icon">ðŸ¢</span> MediCenter
       </div>
       <div class="nav-item" id="nav-vinamed" onclick="switchWorkspace('vinamed')">
-        <span class="nav-icon">🏥</span> ViñaMed
+        <span class="nav-icon">ðŸ¥</span> ViÃ±aMed
       </div>
       <div class="nav-item" id="nav-reconciliation" onclick="switchWorkspace('reconciliation')">
-        <span class="nav-icon">🔍</span> Conciliación
+        <span class="nav-icon">ðŸ”</span> ConciliaciÃ³n
       </div>
 
       <div style="margin: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);"></div>
 
       <div class="nav-item" id="nav-config" onclick="switchWorkspace('config')">
-        <span class="nav-icon">⚙️</span> Configuración
+        <span class="nav-icon">âš™ï¸</span> ConfiguraciÃ³n
       </div>
 
       <div style="margin-top: auto; padding-top: 2rem; text-align: center;">
@@ -990,34 +990,34 @@
       </div>
 
       <div id="subnav">
-        <button class="btn-subnav active" id="subnav-main" onclick="switchSubTab('main')">📊 Panel Principal</button>
-        <button class="btn-subnav" id="subnav-history" onclick="switchSubTab('history')">📅 Historial Mensual</button>
-        <button class="btn-subnav" id="subnav-reconciliation" onclick="switchSubTab('reconciliation')">🔍 Conciliación</button>
-        <button class="btn-subnav" id="subnav-control" onclick="switchSubTab('control')">⚠️ Control de Errores</button>
+        <button class="btn-subnav active" id="subnav-main" onclick="switchSubTab('main')">ðŸ“Š Panel Principal</button>
+        <button class="btn-subnav" id="subnav-history" onclick="switchSubTab('history')">ðŸ“… Historial Mensual</button>
+        <button class="btn-subnav" id="subnav-reconciliation" onclick="switchSubTab('reconciliation')">ðŸ” ConciliaciÃ³n</button>
+        <button class="btn-subnav" id="subnav-control" onclick="switchSubTab('control')">âš ï¸ Control de Errores</button>
       </div>
 
       <div id="view-main" class="view-section active">
         <div id="unmatched-banner"
           style="display:none; background: var(--red-soft); border: 1px solid rgba(187,61,42,.18); color: var(--red); padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; font-weight: 500;">
-          ⚠️ <span id="unmatched-count">0</span> exámenes sin tarifa detectados. Revisa la Configuración para no perder
+          âš ï¸ <span id="unmatched-count">0</span> exÃ¡menes sin tarifa detectados. Revisa la ConfiguraciÃ³n para no perder
           dinero.
         </div>
 
         <div class="grid-top">
           <section id="upload-panel" class="card">
             <h1 class="section-title">Calculadora Diaria</h1>
-            <p class="copy">Arrastra la planilla del día para procesarla y guardarla en la nube.</p>
+            <p class="copy">Arrastra la planilla del dÃ­a para procesarla y guardarla en la nube.</p>
             <div class="fields">
               <div class="field">
-                <label>Fecha de atención (DD/MM/AÑO)</label>
+                <label>Fecha de atenciÃ³n (DD/MM/AÃ‘O)</label>
                 <div style="display:flex; gap:0.4rem; align-items:center;">
                   <button class="btn-soft" type="button" onclick="changeDay(-1)"
-                    style="padding:0.6rem 0.8rem; font-size:1rem;" title="Día anterior">◀</button>
+                    style="padding:0.6rem 0.8rem; font-size:1rem;" title="DÃ­a anterior">â—€</button>
                   <input id="work-date" type="date"
                     style="flex:1; text-align:center; font-family:'DM Mono', monospace; padding:0.6rem;"
                     onchange="loadDataForCurrentDate()" />
                   <button class="btn-soft" type="button" onclick="changeDay(1)"
-                    style="padding:0.6rem 0.8rem; font-size:1rem;" title="Día siguiente">▶</button>
+                    style="padding:0.6rem 0.8rem; font-size:1rem;" title="DÃ­a siguiente">â–¶</button>
                 </div>
               </div>
               <div class="field"><label>Porcentaje (%)</label><input id="payment-percent" type="number" min="0"
@@ -1030,7 +1030,7 @@
                 <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
               <p style="font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--ink);margin:0 0 .6rem;">
-                Arrastra el archivo aquí</p>
+                Arrastra el archivo aquÃ­</p>
               <div class="row" style="justify-content:center;"><span class="chip">XLSX</span><span
                   class="chip">CSV</span></div>
             </div>
@@ -1039,8 +1039,8 @@
           </section>
 
           <section id="actions-panel" class="card">
-            <div class="eyebrow">Resumen Rápido</div>
-            <h2 class="title" id="daily-title-display">Tu día cargado</h2>
+            <div class="eyebrow">Resumen RÃ¡pido</div>
+            <h2 class="title" id="daily-title-display">Tu dÃ­a cargado</h2>
             <div style="margin-top: 1.5rem;">
               <div class="metric">
                 <div class="metric-label">Pago estimado diario</div>
@@ -1068,7 +1068,7 @@
         <div class="card" style="margin-top: 1.5rem;">
           <div
             style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
-            <h3 class="section-title" style="margin:0;">Detalle de Atenciones del Día</h3>
+            <h3 class="section-title" style="margin:0;">Detalle de Atenciones del DÃ­a</h3>
             <input id="daily-search" type="text" placeholder="Buscar paciente o examen..."
               style="width:100%; max-width: 280px; padding:0.4rem 0.8rem; font-size:0.8rem; font-family:'DM Mono',monospace;"
               oninput="renderCurrentSummary()">
@@ -1102,8 +1102,8 @@
           <div class="row">
             <div class="field" style="margin:0; flex-direction:row; align-items:center;"><label>Mes:</label><input
                 id="month-selector" type="month" style="width:auto; padding:0.4rem;" /></div>
-            <button class="btn" id="export-pdf-btn" type="button" onclick="exportMonthlyPDF()">📄 Descargar PDF</button>
-            <button class="btn-soft" id="export-month-xlsx-btn" type="button">📊 Excel</button>
+            <button class="btn" id="export-pdf-btn" type="button" onclick="exportMonthlyPDF()">ðŸ“„ Descargar PDF</button>
+            <button class="btn-soft" id="export-month-xlsx-btn" type="button">ðŸ“Š Excel</button>
           </div>
         </div>
 
@@ -1115,12 +1115,12 @@
               <div class="metric-sub" id="month-total-copy">-</div>
             </div>
             <div class="metric amber">
-              <div class="metric-label">Días trabajados</div>
+              <div class="metric-label">DÃ­as trabajados</div>
               <div class="metric-value" id="month-days">0</div>
               <div class="metric-sub" id="month-average-copy">-</div>
             </div>
             <div class="metric ink">
-              <div class="metric-label">Proyección Fin de Mes (Normal)</div>
+              <div class="metric-label">ProyecciÃ³n Fin de Mes (Normal)</div>
               <div class="metric-value" id="month-goal-gap">$0</div>
               <div class="metric-sub" id="month-projection-copy">-</div>
             </div>
@@ -1129,8 +1129,8 @@
           <div class="two-col">
             <div class="card">
               <div class="panel-title" style="margin-bottom: 0;">
-                <h3 class="section-title" style="margin:0;">Gráfico de Prestaciones</h3>
-                <span class="chip" id="month-days-chip">0 días</span>
+                <h3 class="section-title" style="margin:0;">GrÃ¡fico de Prestaciones</h3>
+                <span class="chip" id="month-days-chip">0 dÃ­as</span>
               </div>
               <div class="chart-wrap"><canvas id="month-chart"></canvas></div>
             </div>
@@ -1142,7 +1142,7 @@
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>Prestación</th>
+                      <th>PrestaciÃ³n</th>
                       <th>Cant.</th>
                       <th>A Pago</th>
                     </tr>
@@ -1160,9 +1160,9 @@
           </div>
 
           <div class="card" style="margin-top: 1.5rem;">
-            <h3 class="section-title">Días Faltantes</h3>
-            <p class="subtle" style="margin-top:-0.5rem; margin-bottom:1rem;">Según los días laborales configurados.</p>
-            <div id="missing-days-list" class="empty">Aún no hay fechas evaluadas.</div>
+            <h3 class="section-title">DÃ­as Faltantes</h3>
+            <p class="subtle" style="margin-top:-0.5rem; margin-bottom:1rem;">SegÃºn los dÃ­as laborales configurados.</p>
+            <div id="missing-days-list" class="empty">AÃºn no hay fechas evaluadas.</div>
           </div>
         </div>
         <div class="card" style="margin-top: 1.5rem;">
@@ -1193,7 +1193,7 @@
           style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
           <div>
             <h1 class="title">Control de Descartes</h1>
-            <p class="copy">Filas del último archivo que fueron ignoradas en este centro.</p>
+            <p class="copy">Filas del Ãºltimo archivo que fueron ignoradas en este centro.</p>
           </div>
           <span class="badge" style="background:var(--burnt);" id="discard-chip">0 descartes</span>
         </div>
@@ -1202,7 +1202,7 @@
           <div class="metric burnt">
             <div class="metric-label">Estado distinto</div>
             <div class="metric-value" id="discard-state">0</div>
-            <div class="metric-sub">No dicen "Fin de Atención".</div>
+            <div class="metric-sub">No dicen "Fin de AtenciÃ³n".</div>
           </div>
           <div class="metric amber">
             <div class="metric-label">Datos incompletos</div>
@@ -1210,9 +1210,9 @@
             <div class="metric-sub">Falta paciente o examen.</div>
           </div>
           <div class="metric ink">
-            <div class="metric-label">Filas vacías</div>
+            <div class="metric-label">Filas vacÃ­as</div>
             <div class="metric-value" id="discard-empty">0</div>
-            <div class="metric-sub">Líneas en blanco en el Excel.</div>
+            <div class="metric-sub">LÃ­neas en blanco en el Excel.</div>
           </div>
         </div>
 
@@ -1224,9 +1224,9 @@
                 <tr>
                   <th>Fila original</th>
                   <th>Motivo</th>
-                  <th>Estado leído</th>
+                  <th>Estado leÃ­do</th>
                   <th>Paciente</th>
-                  <th>Examen leído</th>
+                  <th>Examen leÃ­do</th>
                 </tr>
               </thead>
               <tbody id="discard-tbody"></tbody>
@@ -1239,8 +1239,8 @@
         <div class="panel-title"
           style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
           <div>
-            <h1 class="title">Conciliación Financiera</h1>
-            <p class="copy">Auditoría cruzada: HIS (Registro Diario) vs Liquidación del Centro.</p>
+            <h1 class="title">ConciliaciÃ³n Financiera</h1>
+            <p class="copy">AuditorÃ­a cruzada: HIS (Registro Diario) vs LiquidaciÃ³n del Centro.</p>
           </div>
           <div class="row">
             <div class="field" style="flex-direction: row; align-items: center; gap: 0.5rem; margin: 0;">
@@ -1254,7 +1254,7 @@
               <label style="white-space: nowrap;">Impuestos:</label>
               <select id="recon-tax-type" onchange="runReconciliation()" style="width: auto; padding: 0.3rem 0.6rem;">
                 <option value="bruto">Bruto (100%)</option>
-                <option value="neto">Líquido (~13.75% ret.)</option>
+                <option value="neto">LÃ­quido (~13.75% ret.)</option>
               </select>
             </div>
           </div>
@@ -1262,15 +1262,15 @@
 
         <div class="grid-top" style="grid-template-columns: 1fr 1fr; margin-bottom: 1.5rem;">
           <div class="upload" id="upload-his" style="border-style: solid; background: #fff;">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">ðŸ“‹</div>
             <h3 style="font-weight: 600;">Cargar Reporte HIS</h3>
             <p class="subtle">Registro Diario Profesional</p>
             <input type="file" id="input-his" accept=".csv,.xlsx,.xls" onchange="processReconFile(this, 'his')" />
             <div id="status-his" class="chip" style="margin-top: 0.5rem; display: none;">Archivo cargado</div>
           </div>
           <div class="upload" id="upload-report" style="border-style: solid; background: #fff;">
-            <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
-            <h3 style="font-weight: 600;">Cargar Liquidación</h3>
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">ðŸ’°</div>
+            <h3 style="font-weight: 600;">Cargar LiquidaciÃ³n</h3>
             <p class="subtle">Reporte Mensual del Centro</p>
             <input type="file" id="input-report" accept=".csv,.xlsx,.xls" onchange="processReconFile(this, 'report')" />
             <div id="status-report" class="chip" style="margin-top: 0.5rem; display: none;">Archivo cargado</div>
@@ -1303,12 +1303,12 @@
 
           <div class="card" style="margin-top: 1.5rem;">
             <div class="panel-title" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-              <h3 class="section-title" style="margin: 0;">Detalle de Auditoría</h3>
+              <h3 class="section-title" style="margin: 0;">Detalle de AuditorÃ­a</h3>
               <div class="row">
                 <button class="btn-soft" onclick="filterReconTable('all')">Todos</button>
                 <button class="btn-danger" onclick="filterReconTable('leak')">Fugas</button>
                 <button class="btn-ghost" onclick="filterReconTable('diff')">Diferencias</button>
-                <button class="btn" onclick="saveReconciliationReport()">💾 Guardar Totales</button>
+                <button class="btn" onclick="saveReconciliationReport()">ðŸ’¾ Guardar Totales</button>
               </div>
             </div>
             <div class="table-wrap">
@@ -1334,19 +1334,19 @@
         <div class="card" style="background: var(--teal-soft); border-color: var(--teal); margin-bottom: 1.5rem;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 1rem;">
             <div>
-              <h3 class="section-title" style="margin:0; color:var(--teal);">Ajustes por Centro Médico</h3>
-              <p class="subtle" style="color:var(--teal);">Selecciona qué centro deseas configurar.</p>
+              <h3 class="section-title" style="margin:0; color:var(--teal);">Ajustes por Centro MÃ©dico</h3>
+              <p class="subtle" style="color:var(--teal);">Selecciona quÃ© centro deseas configurar.</p>
             </div>
             <select id="config-center-select" onchange="renderConfig()" style="max-width: 250px; font-weight: 600;">
-              <option value="medicenter">🏢 Configurar MediCenter</option>
-              <option value="vinamed">🏥 Configurar ViñaMed</option>
+              <option value="medicenter">ðŸ¢ Configurar MediCenter</option>
+              <option value="vinamed">ðŸ¥ Configurar ViÃ±aMed</option>
             </select>
           </div>
         </div>
 
         <div class="config-grid">
           <div class="card">
-            <h3 class="section-title">Parámetros Globales del Centro</h3>
+            <h3 class="section-title">ParÃ¡metros Globales del Centro</h3>
             <div class="fields">
               <div class="field"><label>Porcentaje de ganancia (%)</label><input id="settings-default-percent"
                   type="number" min="0" max="100" step="0.1" /></div>
@@ -1356,7 +1356,7 @@
 
             <h3 class="section-title" style="margin-top: 1.5rem; font-size: 1rem;">Mapeo de Columnas Excel</h3>
             <p class="subtle">Si tus columnas tienen nombres raros (ej: "Paciente / Social"), no te preocupes. Escribe
-              aquí solo la palabra clave (ej: "paciente") y el sistema será lo suficientemente inteligente para
+              aquÃ­ solo la palabra clave (ej: "paciente") y el sistema serÃ¡ lo suficientemente inteligente para
               encontrarla.</p>
             <div class="fields">
               <div class="field"><label>Palabra clave Estado</label><input id="map-estado" type="text"
@@ -1370,20 +1370,20 @@
             </div>
 
             <div class="field" style="margin-top:1.5rem;">
-              <label>Días Laborales (Para cálculo de días faltantes)</label>
+              <label>DÃ­as Laborales (Para cÃ¡lculo de dÃ­as faltantes)</label>
               <div class="row" id="workdays-checkboxes">
                 <label><input type="checkbox" value="1" class="wd-chk"> Lu</label>
                 <label><input type="checkbox" value="2" class="wd-chk"> Ma</label>
                 <label><input type="checkbox" value="3" class="wd-chk"> Mi</label>
                 <label><input type="checkbox" value="4" class="wd-chk"> Ju</label>
                 <label><input type="checkbox" value="5" class="wd-chk"> Vi</label>
-                <label><input type="checkbox" value="6" class="wd-chk"> Sá</label>
+                <label><input type="checkbox" value="6" class="wd-chk"> SÃ¡</label>
                 <label><input type="checkbox" value="0" class="wd-chk"> Do</label>
               </div>
             </div>
 
             <div class="row mt-4" style="margin-top: 1.5rem;"><button class="btn" id="save-settings-btn"
-                type="button">Guardar Parámetros</button></div>
+                type="button">Guardar ParÃ¡metros</button></div>
           </div>
 
           <div class="card">
@@ -1395,7 +1395,7 @@
                 <button class="btn-ghost" id="restore-defaults-btn" type="button">Restaurar Arancel</button>
               </div>
             </div>
-            <p class="subtle" style="margin-bottom: 1rem;">Usa el símbolo <code>|</code> para separar variantes (Ej:
+            <p class="subtle" style="margin-bottom: 1rem;">Usa el sÃ­mbolo <code>|</code> para separar variantes (Ej:
               ABDOMINAL|ABDOMEN).</p>
             <div class="rules" id="rules-container"></div>
           </div>
@@ -1405,7 +1405,7 @@
   </div>
 
   <script>
-    // 🔥🔥🔥 FIREBASE CONFIG 🔥🔥🔥
+    // ðŸ”¥ðŸ”¥ðŸ”¥ FIREBASE CONFIG ðŸ”¥ðŸ”¥ðŸ”¥
     const firebaseConfig = {
       apiKey: "AIzaSyALBzBA_mtJ_iDDrHOfex5-8PUI7HaCgbk",
       authDomain: "eco-metricas.firebaseapp.com",
@@ -1436,22 +1436,22 @@
       { id: uid(), aliases: 'DOPPLER ABDOMINAL|DOPPLER VASOS TESTICULARES|DOPPLER TESTICULAR', label: 'Eco Doppler Abdominal / Testicular', base: 64960 },
       { id: uid(), aliases: 'VASOS DEL CUELLO|DOPPLER CUELLO|CAROTIDEO|CAROTIDEA|DOPPLER CAROTIDEO', label: 'Eco Doppler Vasos del Cuello', base: 59530 },
       { id: uid(), aliases: 'TRANSCRANEANA|DOPPLER TRANSCRANEANO', label: 'Eco Doppler Transcraneano', base: 63040 },
-      { id: uid(), aliases: 'VASCULAR PERIFERICA|DOPPLER VASCULAR|DOPPLER PERIFERICO|DOPPLER VENOSO|DOPPLER ARTERIAL|DOPPLER EXTREMIDADES', label: 'Eco Doppler Vascular Periférica', base: 63040 },
-      { id: uid(), aliases: 'SEGUIMIENTO DE OVULACION TRANSVAGINAL|SEGUIMIENTO OVULACION TRANSVAGINAL', label: 'Eco Seguim. Ovulación Transvaginal', base: 21410 },
-      { id: uid(), aliases: 'SEGUIMIENTO DE OVULACION|SEGUIMIENTO OVULACION', label: 'Eco Seguimiento Ovulación', base: 23980 },
+      { id: uid(), aliases: 'VASCULAR PERIFERICA|DOPPLER VASCULAR|DOPPLER PERIFERICO|DOPPLER VENOSO|DOPPLER ARTERIAL|DOPPLER EXTREMIDADES', label: 'Eco Doppler Vascular PerifÃ©rica', base: 63040 },
+      { id: uid(), aliases: 'SEGUIMIENTO DE OVULACION TRANSVAGINAL|SEGUIMIENTO OVULACION TRANSVAGINAL', label: 'Eco Seguim. OvulaciÃ³n Transvaginal', base: 21410 },
+      { id: uid(), aliases: 'SEGUIMIENTO DE OVULACION|SEGUIMIENTO OVULACION', label: 'Eco Seguimiento OvulaciÃ³n', base: 23980 },
       { id: uid(), aliases: 'TRANSVAGINAL|TRANSRECTAL', label: 'Eco Transvaginal / Transrectal', base: 15400 },
-      { id: uid(), aliases: 'OBSTETRICA|OBSTÉTRICA', label: 'Eco Obstétrica', base: 8730 },
-      { id: uid(), aliases: 'GINECOLOGICA|PELVIANA FEMENINA|PELVICA FEMENINA', label: 'Eco Ginecológica / Pelviana', base: 14670 },
-      { id: uid(), aliases: 'PELVICA MASCULINA|PELVIANA MASCULINA|VEJIGA Y PROSTATA', label: 'Eco Pélvica Masculina', base: 15330 },
+      { id: uid(), aliases: 'OBSTETRICA|OBSTÃ‰TRICA', label: 'Eco ObstÃ©trica', base: 8730 },
+      { id: uid(), aliases: 'GINECOLOGICA|PELVIANA FEMENINA|PELVICA FEMENINA', label: 'Eco GinecolÃ³gica / Pelviana', base: 14670 },
+      { id: uid(), aliases: 'PELVICA MASCULINA|PELVIANA MASCULINA|VEJIGA Y PROSTATA', label: 'Eco PÃ©lvica Masculina', base: 15330 },
       { id: uid(), aliases: 'RENAL|BAZO', label: 'Eco Renal / Bazo', base: 19110 },
-      { id: uid(), aliases: 'ENCEFALICA|ENCEFALO|CEREBRAL', label: 'Eco Encefálica', base: 20630 },
+      { id: uid(), aliases: 'ENCEFALICA|ENCEFALO|CEREBRAL', label: 'Eco EncefÃ¡lica', base: 20630 },
       { id: uid(), aliases: 'MAMARIA|MAMAS', label: 'Eco Mamaria', base: 19210 },
       { id: uid(), aliases: 'OCULAR|OJO', label: 'Eco Ocular', base: 22290 },
       { id: uid(), aliases: 'TESTICULAR|TESTICULOS|ESCROTAL', label: 'Eco Testicular', base: 18960 },
       { id: uid(), aliases: 'TIROIDEA|TIROIDES|CUELLO TIROIDES', label: 'Eco Tiroidea', base: 19210 },
-      { id: uid(), aliases: 'PARTES BLANDAS|MUSCULOESQUELETICA|ARTICULAR|HOMBRO|RODILLA|CODO|TOBILLO|MUÑECA|PIE|MANO|CADERA|MUSCULAR', label: 'Eco Partes Blandas / MSK', base: 19210 },
+      { id: uid(), aliases: 'PARTES BLANDAS|MUSCULOESQUELETICA|ARTICULAR|HOMBRO|RODILLA|CODO|TOBILLO|MUÃ‘ECA|PIE|MANO|CADERA|MUSCULAR', label: 'Eco Partes Blandas / MSK', base: 19210 },
       { id: uid(), aliases: 'ABDOMINAL|ABDOMEN', label: 'Eco Abdominal', base: 27570 },
-      { id: uid(), aliases: 'APOYO A CIRUGIA|APOYO A PROCEDIMIENTO|ECOGRAFIA INTRAOPERATORIA', label: 'Eco Apoyo Cirugía', base: 17040 }
+      { id: uid(), aliases: 'APOYO A CIRUGIA|APOYO A PROCEDIMIENTO|ECOGRAFIA INTRAOPERATORIA', label: 'Eco Apoyo CirugÃ­a', base: 17040 }
     ];
 
     const DEFAULT_RULES_N2 = [
@@ -1459,22 +1459,22 @@
       { id: uid(), aliases: 'DOPPLER ABDOMINAL|DOPPLER VASOS TESTICULARES|DOPPLER TESTICULAR', label: 'Eco Doppler Abdominal / Testicular', base: 84450 },
       { id: uid(), aliases: 'VASOS DEL CUELLO|DOPPLER CUELLO|CAROTIDEO|CAROTIDEA|DOPPLER CAROTIDEO', label: 'Eco Doppler Vasos del Cuello', base: 77390 },
       { id: uid(), aliases: 'TRANSCRANEANA|DOPPLER TRANSCRANEANO', label: 'Eco Doppler Transcraneano', base: 81950 },
-      { id: uid(), aliases: 'VASCULAR PERIFERICA|DOPPLER VASCULAR|DOPPLER PERIFERICO|DOPPLER VENOSO|DOPPLER ARTERIAL|DOPPLER EXTREMIDADES', label: 'Eco Doppler Vascular Periférica', base: 81950 },
-      { id: uid(), aliases: 'SEGUIMIENTO DE OVULACION TRANSVAGINAL|SEGUIMIENTO OVULACION TRANSVAGINAL', label: 'Eco Seguim. Ovulación Transvaginal', base: 27830 },
-      { id: uid(), aliases: 'SEGUIMIENTO DE OVULACION|SEGUIMIENTO OVULACION', label: 'Eco Seguimiento Ovulación', base: 31170 },
+      { id: uid(), aliases: 'VASCULAR PERIFERICA|DOPPLER VASCULAR|DOPPLER PERIFERICO|DOPPLER VENOSO|DOPPLER ARTERIAL|DOPPLER EXTREMIDADES', label: 'Eco Doppler Vascular PerifÃ©rica', base: 81950 },
+      { id: uid(), aliases: 'SEGUIMIENTO DE OVULACION TRANSVAGINAL|SEGUIMIENTO OVULACION TRANSVAGINAL', label: 'Eco Seguim. OvulaciÃ³n Transvaginal', base: 27830 },
+      { id: uid(), aliases: 'SEGUIMIENTO DE OVULACION|SEGUIMIENTO OVULACION', label: 'Eco Seguimiento OvulaciÃ³n', base: 31170 },
       { id: uid(), aliases: 'TRANSVAGINAL|TRANSRECTAL', label: 'Eco Transvaginal / Transrectal', base: 20020 },
-      { id: uid(), aliases: 'OBSTETRICA|OBSTÉTRICA', label: 'Eco Obstétrica', base: 11350 },
-      { id: uid(), aliases: 'GINECOLOGICA|PELVIANA FEMENINA|PELVICA FEMENINA', label: 'Eco Ginecológica / Pelviana', base: 19070 },
-      { id: uid(), aliases: 'PELVICA MASCULINA|PELVIANA MASCULINA|VEJIGA Y PROSTATA', label: 'Eco Pélvica Masculina', base: 19930 },
+      { id: uid(), aliases: 'OBSTETRICA|OBSTÃ‰TRICA', label: 'Eco ObstÃ©trica', base: 11350 },
+      { id: uid(), aliases: 'GINECOLOGICA|PELVIANA FEMENINA|PELVICA FEMENINA', label: 'Eco GinecolÃ³gica / Pelviana', base: 19070 },
+      { id: uid(), aliases: 'PELVICA MASCULINA|PELVIANA MASCULINA|VEJIGA Y PROSTATA', label: 'Eco PÃ©lvica Masculina', base: 19930 },
       { id: uid(), aliases: 'RENAL|BAZO', label: 'Eco Renal / Bazo', base: 24840 },
-      { id: uid(), aliases: 'ENCEFALICA|ENCEFALO|CEREBRAL', label: 'Eco Encefálica', base: 26820 },
+      { id: uid(), aliases: 'ENCEFALICA|ENCEFALO|CEREBRAL', label: 'Eco EncefÃ¡lica', base: 26820 },
       { id: uid(), aliases: 'MAMARIA|MAMAS', label: 'Eco Mamaria', base: 24970 },
       { id: uid(), aliases: 'OCULAR|OJO', label: 'Eco Ocular', base: 28980 },
       { id: uid(), aliases: 'TESTICULAR|TESTICULOS|ESCROTAL', label: 'Eco Testicular', base: 24650 },
       { id: uid(), aliases: 'TIROIDEA|TIROIDES|CUELLO TIROIDES', label: 'Eco Tiroidea', base: 24970 },
-      { id: uid(), aliases: 'PARTES BLANDAS|MUSCULOESQUELETICA|ARTICULAR|HOMBRO|RODILLA|CODO|TOBILLO|MUÑECA|PIE|MANO|CADERA|MUSCULAR', label: 'Eco Partes Blandas / MSK', base: 24970 },
+      { id: uid(), aliases: 'PARTES BLANDAS|MUSCULOESQUELETICA|ARTICULAR|HOMBRO|RODILLA|CODO|TOBILLO|MUÃ‘ECA|PIE|MANO|CADERA|MUSCULAR', label: 'Eco Partes Blandas / MSK', base: 24970 },
       { id: uid(), aliases: 'ABDOMINAL|ABDOMEN', label: 'Eco Abdominal', base: 35840 },
-      { id: uid(), aliases: 'APOYO A CIRUGIA|APOYO A PROCEDIMIENTO|ECOGRAFIA INTRAOPERATORIA', label: 'Eco Apoyo Cirugía', base: 22150 }
+      { id: uid(), aliases: 'APOYO A CIRUGIA|APOYO A PROCEDIMIENTO|ECOGRAFIA INTRAOPERATORIA', label: 'Eco Apoyo CirugÃ­a', base: 22150 }
     ];
 
     let APP_STATE = {
@@ -1500,7 +1500,7 @@
     let chartInstance = null;
     let isOffline = !navigator.onLine;
 
-    // ==== SISTEMA DE AUTH, LISTA BLANCA Y MIGRACIÓN ====
+    // ==== SISTEMA DE AUTH, LISTA BLANCA Y MIGRACIÃ“N ====
     // Simulamos un usuario para que las referencias a base de datos no fallen
     CURRENT_USER = { uid: "revisor_temporal", email: "revisor@ecometricas.cl", photoURL: "" };
     DOC_REF = db.collection("users").doc(CURRENT_USER.uid);
@@ -1511,17 +1511,17 @@
       if(loader) loader.style.display = 'none';
       try {
         if(typeof hydrateData === 'function') hydrateData();
-      } catch(e) { console.warn("Error en hidratación de datos:", e); }
+      } catch(e) { console.warn("Error en hidrataciÃ³n de datos:", e); }
     }, 100);
 
-    // ==== SISTEMA DE AUTH DESHABILITADO PARA REVISIÓN ====
+    // ==== SISTEMA DE AUTH DESHABILITADO PARA REVISIÃ“N ====
     /*
     auth.onAuthStateChanged(async (user) => { ... });
     */
 
     function loginGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider).catch(err => alert("Error al iniciar sesión: " + err.message));
+      auth.signInWithPopup(provider).catch(err => alert("Error al iniciar sesiÃ³n: " + err.message));
     }
 
     function logout() {
@@ -1531,7 +1531,7 @@
     async function hydrateData() {
       const loader = document.getElementById('cloud-loading');
       const retryBtn = document.getElementById('retry-btn');
-      // No mostrar loader si es el bypass de revisión
+      // No mostrar loader si es el bypass de revisiÃ³n
       if (CURRENT_USER.uid !== "revisor_temporal") loader.style.display = 'flex';
 
       const failTimer = setTimeout(() => {
@@ -1565,7 +1565,7 @@
 
       } catch (error) {
         console.error("Error conectando a Firebase:", error);
-        showToast("Trabajando sin conexión profunda.", "error");
+        showToast("Trabajando sin conexiÃ³n profunda.", "error");
       }
 
       clearTimeout(failTimer);
@@ -1584,13 +1584,13 @@
         await DOC_REF.set(cleanData);
       } catch (error) {
         console.error("Error guardando en la nube:", error);
-        if (isOffline) showToast("Guardado localmente. Se subirá al volver internet.", "warn");
+        if (isOffline) showToast("Guardado localmente. Se subirÃ¡ al volver internet.", "warn");
       }
     }
 
     // ==== UTILIDADES UX (TOASTS, OFFLINE) ====
     window.addEventListener('offline', () => { isOffline = true; document.getElementById('offline-banner').style.display = 'block'; });
-    window.addEventListener('online', () => { isOffline = false; document.getElementById('offline-banner').style.display = 'none'; persist(); showToast("Conexión restaurada. Sincronizado.", "ok"); });
+    window.addEventListener('online', () => { isOffline = false; document.getElementById('offline-banner').style.display = 'none'; persist(); showToast("ConexiÃ³n restaurada. Sincronizado.", "ok"); });
 
     function showToast(msg, type = "ok") {
       const c = document.getElementById('toast-container');
@@ -1602,7 +1602,7 @@
       setTimeout(() => t.remove(), 3500);
     }
 
-    // ==== NAVEGACIÓN Y TABS ====
+    // ==== NAVEGACIÃ“N Y TABS ====
     function switchWorkspace(workspace) {
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       const targetNav = document.getElementById('nav-' + workspace);
@@ -1612,26 +1612,32 @@
       const subnav = document.getElementById('subnav');
 
       if (workspace === 'config') {
-        header.style.display = 'none'; subnav.style.display = 'none';
+        if (header) header.style.display = 'none';
+        if (subnav) subnav.style.display = 'none';
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-        document.getElementById('view-config').classList.add('active');
-        document.getElementById('config-center-select').value = APP_STATE.activeWorkspace;
+        const vConfig = document.getElementById('view-config');
+        if (vConfig) vConfig.classList.add('active');
+        const cSelect = document.getElementById('config-center-select');
+        if (cSelect) cSelect.value = APP_STATE.activeWorkspace;
         renderConfig();
       } else if (workspace === 'reconciliation') {
-        header.style.display = 'none'; subnav.style.display = 'none';
+        if (header) header.style.display = 'none';
+        if (subnav) subnav.style.display = 'none';
         document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-        document.getElementById('view-reconciliation').classList.add('active');
+        const vRecon = document.getElementById('view-reconciliation');
+        if (vRecon) vRecon.classList.add('active');
       } else {
-        header.style.display = 'flex'; subnav.style.display = 'flex';
+        if (header) header.style.display = 'flex';
+        if (subnav) subnav.style.display = 'flex';
         APP_STATE.activeWorkspace = workspace;
 
         if (UI.wsTitle) {
-          UI.wsTitle.textContent = workspace === 'medicenter' ? 'MediCenter' : 'ViñaMed';
+          UI.wsTitle.textContent = workspace === 'medicenter' ? 'MediCenter' : 'ViÃ±aMed';
         }
 
         const wsData = APP_STATE[workspace];
-        UI.percentInput.value = wsData.settings.percent;
-        UI.workDateInput.value = wsData.currentSummary ? wsData.currentSummary.workDate : todayISO();
+        if (UI.percentInput) UI.percentInput.value = wsData.settings.percent;
+        if (UI.workDateInput) UI.workDateInput.value = wsData.currentSummary ? wsData.currentSummary.workDate : todayISO();
         renderAll();
         switchSubTab(APP_STATE.activeSubTab);
       }
@@ -1641,8 +1647,13 @@
       APP_STATE.activeSubTab = tabId;
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.btn-subnav').forEach(el => el.classList.remove('active'));
-      document.getElementById('view-' + tabId).classList.add('active');
-      document.getElementById('subnav-' + tabId).classList.add('active');
+      
+      const vTarget = document.getElementById('view-' + tabId);
+      const sTarget = document.getElementById('subnav-' + tabId);
+      
+      if (vTarget) vTarget.classList.add('active');
+      if (sTarget) sTarget.classList.add('active');
+      
       if (tabId === 'history') renderMonthlyOverview();
     }
 
@@ -1690,7 +1701,7 @@
 
     function renderAll() { renderCurrentSummary(); renderMonthlyOverview(); renderDiscards(); renderHistory(); }
 
-    // ==== CONFIGURACIÓN Y REGLAS ====
+    // ==== CONFIGURACIÃ“N Y REGLAS ====
     function getConfigState() { return APP_STATE[document.getElementById('config-center-select').value]; }
 
     function renderConfig() {
@@ -1711,7 +1722,7 @@
     function renderRules(confState) {
       const c = document.getElementById('rules-container'); const rules = confState ? confState.settings.priceRules : getConfigState().settings.priceRules;
       if (!rules.length) { c.innerHTML = `<div class="empty">Sin reglas.</div>`; return }
-      c.innerHTML = rules.map(r => `<div class="rule" data-rule-id="${r.id}"><div class="rule-grid"><div class="field"><label>Variantes</label><input type="text" data-field="aliases" value="${escapeAttribute(r.aliases)}" /></div><div class="field"><label>Categoría</label><input type="text" data-field="label" value="${escapeAttribute(r.label)}" /></div><div class="field"><label>Valor base ($)</label><input type="number" min="0" step="10" data-field="base" value="${Number(r.base) || 0}" /></div><button class="btn-danger" type="button" onclick="removeRule('${r.id}')">Eliminar</button></div></div>`).join('') + `<div class="row"><button class="btn" type="button" onclick="saveRules()">Guardar Reglas</button></div>`
+      c.innerHTML = rules.map(r => `<div class="rule" data-rule-id="${r.id}"><div class="rule-grid"><div class="field"><label>Variantes</label><input type="text" data-field="aliases" value="${escapeAttribute(r.aliases)}" /></div><div class="field"><label>CategorÃ­a</label><input type="text" data-field="label" value="${escapeAttribute(r.label)}" /></div><div class="field"><label>Valor base ($)</label><input type="number" min="0" step="10" data-field="base" value="${Number(r.base) || 0}" /></div><button class="btn-danger" type="button" onclick="removeRule('${r.id}')">Eliminar</button></div></div>`).join('') + `<div class="row"><button class="btn" type="button" onclick="saveRules()">Guardar Reglas</button></div>`
     }
 
     async function saveSettingsFromPanel() {
@@ -1764,7 +1775,7 @@
       }
     }
 
-    // ESTA ES LA FUNCIÓN CLAVE QUE BORRA TILDES Y ESPACIOS
+    // ESTA ES LA FUNCIÃ“N CLAVE QUE BORRA TILDES Y ESPACIOS
     function normalizeStr(s) {
       return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
     }
@@ -1797,7 +1808,7 @@
       };
 
       if (idx.estado === -1 || idx.paciente === -1 || idx.examen === -1) {
-        showToast("Error. Leí estas columnas: " + headers.slice(0, 5).join(', '), "error");
+        showToast("Error. LeÃ­ estas columnas: " + headers.slice(0, 5).join(', '), "error");
         return;
       }
 
@@ -1808,7 +1819,7 @@
         if (!row || !row.some(cell => String(cell || '').trim() !== '')) { disc.empty++; return; }
         if (!row[idx.paciente] || !row[idx.examen]) { disc.missing++; return; }
 
-        // AQUÍ ESTÁ LA CORRECCIÓN: Limpiamos la tilde de "Atención"
+        // AQUÃ ESTÃ LA CORRECCIÃ“N: Limpiamos la tilde de "AtenciÃ³n"
         const estadoLimpio = normalizeStr(row[idx.estado]);
         if (!estadoLimpio.includes('fin de atencion')) {
           disc.state++;
@@ -1828,7 +1839,7 @@
 
       const duplicate = ws.history.find(e => e.workDate === summary.workDate);
       if (duplicate) {
-        const sumar = window.confirm(`Ya hay un archivo guardado para el ${prettyDate(summary.workDate)}.\n\n¿Deseas SUMAR estos nuevos pacientes a los que ya estaban?\n(Aceptar = Sumar / Cancelar = Reemplazar)`);
+        const sumar = window.confirm(`Ya hay un archivo guardado para el ${prettyDate(summary.workDate)}.\n\nÂ¿Deseas SUMAR estos nuevos pacientes a los que ya estaban?\n(Aceptar = Sumar / Cancelar = Reemplazar)`);
         if (sumar) {
           const combinedRows = [...duplicate.rows, ...processed];
           summary = buildSessionSummary(combinedRows, duplicate.fileName + ' + ' + fileName, summary.workDate, paymentPercent, disc);
@@ -1838,7 +1849,7 @@
 
       ws.history.push(summary);
       ws.currentSummary = summary; ws.currentRows = summary.rows; ws.currentDiscardStats = disc; ws.currentFileName = fileName;
-      persist(); renderAll(); showToast("✓ Procesado exitosamente.", "ok");
+      persist(); renderAll(); showToast("âœ“ Procesado exitosamente.", "ok");
     }
 
     function renderCurrentSummary() {
@@ -1850,7 +1861,7 @@
 
       if (!s) {
         setText('daily-patients', '0'); setText('daily-base', '$0'); setText('daily-payment', '$0'); setText('daily-top-exam', '-'); setText('daily-payment-copy', `Aplica ${formatPercent(sanitizePercent(UI.percentInput.value, getState().settings.percent))}`);
-        tbody.innerHTML = `<tr><td colspan="4"><div class="empty">Carga un archivo para procesar este día.</div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4"><div class="empty">Carga un archivo para procesar este dÃ­a.</div></td></tr>`;
         banner.style.display = 'none'; return;
       }
 
@@ -1862,7 +1873,7 @@
         if (searchInput) displayRows = displayRows.filter(r => r.paciente.toLowerCase().includes(searchInput) || r.examenRaw.toLowerCase().includes(searchInput) || r.label.toLowerCase().includes(searchInput));
         if (displayRows.length > 0) tbody.innerHTML = displayRows.map(r => `<tr><td>${escapeHtml(r.paciente)}</td><td>${escapeHtml(r.examenRaw)}</td><td>${escapeHtml(r.label)}</td><td>${fmtCLP(calcPayment(r.base, p))}</td></tr>`).join('');
         else tbody.innerHTML = `<tr><td colspan="4"><div class="empty">No hay resultados.</div></td></tr>`;
-      } else tbody.innerHTML = `<tr><td colspan="4"><div class="empty">No hay pacientes válidos.</div></td></tr>`;
+      } else tbody.innerHTML = `<tr><td colspan="4"><div class="empty">No hay pacientes vÃ¡lidos.</div></td></tr>`;
 
       if (s.unmatchedEntries && s.unmatchedEntries.length) {
         banner.style.display = 'block';
@@ -1873,7 +1884,7 @@
     function renderMonthlyOverview() {
       const ws = getState(); const month = APP_STATE.selectedMonth || currentMonth(); const entries = getEntriesForMonth(month); const totals = summarizeMonth(entries); const goal = sanitizeMoney(ws.settings.monthlyGoal, 0); const projection = projectMonth(totals.totalPayment, entries.length, month);
 
-      setText('month-total', fmtCLP(totals.totalPayment)); setText('month-days', String(entries.length)); setText('month-goal-gap', fmtCLP(projection)); setText('month-total-copy', goal > 0 ? `Meta: ${fmtCLP(goal)}` : `Bruto: ${fmtCLP(totals.totalBase)}`); setText('month-average-copy', `Promedio: ${fmtCLP(entries.length ? totals.totalPayment / entries.length : 0)} /día`); setText('month-projection-copy', goal > 0 && goal > totals.totalPayment ? `Faltan ${fmtCLP(goal - totals.totalPayment)}` : `Proyección fin de mes`); setText('month-days-chip', `${entries.length} día(s)`);
+      setText('month-total', fmtCLP(totals.totalPayment)); setText('month-days', String(entries.length)); setText('month-goal-gap', fmtCLP(projection)); setText('month-total-copy', goal > 0 ? `Meta: ${fmtCLP(goal)}` : `Bruto: ${fmtCLP(totals.totalBase)}`); setText('month-average-copy', `Promedio: ${fmtCLP(entries.length ? totals.totalPayment / entries.length : 0)} /dÃ­a`); setText('month-projection-copy', goal > 0 && goal > totals.totalPayment ? `Faltan ${fmtCLP(goal - totals.totalPayment)}` : `ProyecciÃ³n fin de mes`); setText('month-days-chip', `${entries.length} dÃ­a(s)`);
 
       if (UI.wsBadge) {
         const progress = goal > 0 ? Math.min(100, Math.round((totals.totalPayment / goal) * 100)) : 0;
@@ -1899,34 +1910,34 @@
     function renderDiscards() {
       const s = getState().currentDiscardStats || emptyDiscardStats();
       setText('discard-chip', `${s.state + s.missing + s.empty} descartadas`); setText('discard-state', String(s.state)); setText('discard-missing', String(s.missing)); setText('discard-empty', String(s.empty));
-      const tbody = document.getElementById('discard-tbody'); if (!s.details.length) { tbody.innerHTML = `<tr><td colspan="5"><div class="empty">No hay descartes en el último archivo.</div></td></tr>`; return }
+      const tbody = document.getElementById('discard-tbody'); if (!s.details.length) { tbody.innerHTML = `<tr><td colspan="5"><div class="empty">No hay descartes en el Ãºltimo archivo.</div></td></tr>`; return }
       tbody.innerHTML = s.details.map(i => `<tr><td>${i.rowNumber}</td><td><span class="pill warn">${escapeHtml(i.reason)}</span></td><td>${escapeHtml(i.estado || '-')}</td><td>${escapeHtml(i.paciente || '-')}</td><td>${escapeHtml(i.examenRaw || '-')}</td></tr>`).join('')
     }
 
     function renderHistory() {
       const tbody = document.getElementById('history-tbody'); const entries = getEntriesForMonth(APP_STATE.selectedMonth);
-      if (!entries.length) { tbody.innerHTML = `<tr><td colspan="5"><div class="empty">No hay días guardados este mes.</div></td></tr>`; return }
-      tbody.innerHTML = entries.slice().sort((a, b) => b.workDate.localeCompare(a.workDate)).map(e => `<tr><td>${prettyDate(e.workDate)}</td><td>${escapeHtml(e.fileName)}</td><td>${e.totalRows}</td><td>${fmtCLP(e.totalPayment)}</td><td style="display:flex; gap:0.3rem;"><button class="btn-ghost" onclick="loadHistoryEntry('${e.id}')">Ver</button><button class="btn-danger" onclick="deleteHistoryEntry('${e.id}')">🗑️</button></td></tr>`).join('')
+      if (!entries.length) { tbody.innerHTML = `<tr><td colspan="5"><div class="empty">No hay dÃ­as guardados este mes.</div></td></tr>`; return }
+      tbody.innerHTML = entries.slice().sort((a, b) => b.workDate.localeCompare(a.workDate)).map(e => `<tr><td>${prettyDate(e.workDate)}</td><td>${escapeHtml(e.fileName)}</td><td>${e.totalRows}</td><td>${fmtCLP(e.totalPayment)}</td><td style="display:flex; gap:0.3rem;"><button class="btn-ghost" onclick="loadHistoryEntry('${e.id}')">Ver</button><button class="btn-danger" onclick="deleteHistoryEntry('${e.id}')">ðŸ—‘ï¸</button></td></tr>`).join('')
     }
 
     function renderMissingDays(entries, month) {
       const list = document.getElementById('missing-days-list'); const missing = computeMissingDates(entries, month);
-      if (!entries.length) { list.innerHTML = `<div class="empty">Carga un día para ver faltantes.</div>`; return }
-      list.innerHTML = missing.length ? missing.map(prettyDate).join(', ') : 'Todo al día según tu horario.';
+      if (!entries.length) { list.innerHTML = `<div class="empty">Carga un dÃ­a para ver faltantes.</div>`; return }
+      list.innerHTML = missing.length ? missing.map(prettyDate).join(', ') : 'Todo al dÃ­a segÃºn tu horario.';
     }
 
     // ==== ACCIONES DE HISTORIAL ====
     async function deleteHistoryEntry(id) {
-      if (!window.confirm('¿Borrar los datos de este día en la nube?')) return;
+      if (!window.confirm('Â¿Borrar los datos de este dÃ­a en la nube?')) return;
       const ws = getState(); ws.history = ws.history.filter(e => e.id !== id);
       if (ws.currentSummary && ws.currentSummary.id === id) { ws.currentSummary = null; ws.currentRows = []; }
-      await persist(); renderAll(); showToast("Día borrado.", "ok");
+      await persist(); renderAll(); showToast("DÃ­a borrado.", "ok");
     }
 
     let pendingDeleteAction = null;
     function confirmDeleteMonth() {
       const month = prettyMonth(APP_STATE.selectedMonth);
-      document.getElementById('confirm-text').textContent = `Se eliminarán permanentemente los registros de ${month}.`;
+      document.getElementById('confirm-text').textContent = `Se eliminarÃ¡n permanentemente los registros de ${month}.`;
       document.getElementById('confirm-modal').style.display = 'flex';
       pendingDeleteAction = async () => {
         const ws = getState();
@@ -1939,7 +1950,7 @@
 
     function exportMonthXlsxDetail() {
       const entries = getEntriesForMonth(APP_STATE.selectedMonth); if (!entries.length) return; const detailRows = [];
-      entries.sort((a, b) => a.workDate.localeCompare(b.workDate)).forEach(entry => { entry.rows.forEach(r => { detailRows.push({ "Fecha Atención": prettyDate(entry.workDate), "Paciente": r.paciente, "Examen Original": r.examenRaw, "Categoría Asignada": r.label, "Valor Base": r.base, "Porcentaje Aplicado": formatPercent(entry.paymentPercent), "A Pago": calcPayment(r.base, entry.paymentPercent) }); }); });
+      entries.sort((a, b) => a.workDate.localeCompare(b.workDate)).forEach(entry => { entry.rows.forEach(r => { detailRows.push({ "Fecha AtenciÃ³n": prettyDate(entry.workDate), "Paciente": r.paciente, "Examen Original": r.examenRaw, "CategorÃ­a Asignada": r.label, "Valor Base": r.base, "Porcentaje Aplicado": formatPercent(entry.paymentPercent), "A Pago": calcPayment(r.base, entry.paymentPercent) }); }); });
       const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(detailRows), 'Detalle Pacientes');
       XLSX.writeFile(wb, `ecometricas-${APP_STATE.activeWorkspace}-${APP_STATE.selectedMonth || currentMonth()}.xlsx`);
     }
@@ -1959,7 +1970,7 @@
       showToast("PDF Generado exitosamente");
     }
 
-    // ==== MÓDULO DE CONCILIACIÓN FINANCIERA ====
+    // ==== MÃ“DULO DE CONCILIACIÃ“N FINANCIERA ====
     const arancelFonasa2026 = {
       "ECOTOMOGRAFIA ABDOMINAL(INCLUYE HIGADO, VIA BILIAR, ETC)": { nivel1: 27570, nivel2: 35840 },
       "ECOGRAFIA PELVICA MASCULINA (INCLUYE VEJIGA Y PROSTATA)": { nivel1: 15330, nivel2: 19930 },
@@ -1972,7 +1983,7 @@
     function normalizeMedName(s) {
       if (!s) return "";
       let n = String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
-      // Estandarización solicitada por el usuario
+      // EstandarizaciÃ³n solicitada por el usuario
       n = n.replace(/ECOTOMOGRAFIA|ECOGRAFIA|ECO/g, 'ECO');
       n = n.replace(/TRANSVAGINAL|T\.V\.|ENDOVAGINAL/g, 'TV');
       n = n.replace(/PELVICA|PELVIANA/g, 'PELVICA');
@@ -2016,9 +2027,9 @@
       const fonasaLevel = document.getElementById('recon-fonasa-level').value;
       const isNet = document.getElementById('recon-tax-type').value === 'neto';
       const profitPercent = getState().settings.percent || 30; // 30% por defecto si no hay nada
-      const taxFactor = isNet ? 0.8625 : 1.0; // Simulando retención ~13.75%
+      const taxFactor = isNet ? 0.8625 : 1.0; // Simulando retenciÃ³n ~13.75%
 
-      // 1. Mapear HIS (Filtro Fin de Atención)
+      // 1. Mapear HIS (Filtro Fin de AtenciÃ³n)
       const hisMap = {}; // Key: Paciente|Examen
       const hisHeaders = his[0].map(h => normalizeStr(h));
       const idxH = {
@@ -2081,7 +2092,7 @@
         }
       });
 
-      // 3. Detectar Fugas (Lo que quedó en HIS y no se emparejó)
+      // 3. Detectar Fugas (Lo que quedÃ³ en HIS y no se emparejÃ³)
       Object.entries(hisMap).forEach(([key, items]) => {
         items.forEach(item => {
           results.leak.push({ paciente: item.paciente, examen: item.examen, financiador: 'N/A', esperado: 0, pagado: 0, diff: 0 });
@@ -2106,7 +2117,7 @@
       setText('recon-total-diff', fmtCLP(Math.abs(sum(r.diff, 'diff'))));
       setText('recon-count-diff', `${r.diff.length} registros`);
       
-      // Para fugas, estimamos la pérdida. Como no sabemos el valor, podrías usar un promedio.
+      // Para fugas, estimamos la pÃ©rdida. Como no sabemos el valor, podrÃ­as usar un promedio.
       // Por ahora solo conteo o si quieres, un valor base.
       setText('recon-total-leak', `${r.leak.length} fugas`);
       setText('recon-count-leak', 'Atenciones no pagadas');
@@ -2120,6 +2131,8 @@
     function filterReconTable(filter) {
       const r = APP_STATE.reconciliation.results;
       const tbody = document.getElementById('recon-tbody');
+      if (!r || !tbody) return;
+
       let data = [];
       if (filter === 'all') data = [...r.ok, ...r.diff, ...r.leak, ...r.extra];
       else if (filter === 'leak') data = r.leak;
@@ -2129,17 +2142,17 @@
         let statusClass = "pill value";
         let statusText = "OK";
         if (r.leak.includes(i)) { statusClass = "pill warn"; statusText = "FUGA"; }
-        if (r.diff.includes(i)) { statusClass = "pill warn"; statusText = "DIFERENCIA"; }
-        if (r.extra.includes(i)) { statusClass = "pill zero"; statusText = "EXCEDENTE"; }
+        else if (r.diff.includes(i)) { statusClass = "pill warn"; statusText = "DIFERENCIA"; }
+        else if (r.extra.includes(i)) { statusClass = "pill zero"; statusText = "EXCEDENTE"; }
 
         return `<tr>
           <td><span class="${statusClass}">${statusText}</span></td>
           <td>${escapeHtml(i.paciente)}</td>
           <td>${escapeHtml(i.examen)}</td>
           <td>${escapeHtml(i.financiador)}</td>
-          <td>${fmtCLP(i.esperado)}</td>
-          <td>${fmtCLP(i.pagado)}</td>
-          <td style="font-weight:bold; color:${i.diff < -100 ? 'var(--red)' : 'inherit'}">${fmtCLP(i.diff)}</td>
+          <td>${fmtCLP(i.esperado || 0)}</td>
+          <td>${fmtCLP(i.pagado || 0)}</td>
+          <td style="font-weight:bold; color:${(i.diff || 0) < -100 ? 'var(--red)' : 'inherit'}">${fmtCLP(i.diff || 0)}</td>
         </tr>`;
       }).join('');
     }
@@ -2160,13 +2173,28 @@
 
       try {
         await db.collection("users").doc(CURRENT_USER.uid).collection("recon_history").add(stats);
-        showToast("Reporte estadístico guardado en la nube.", "ok");
+        showToast("Reporte estadÃ­stico guardado en la nube.", "ok");
       } catch (e) {
-        showToast("Error al guardar histórico.", "error");
+        showToast("Error al guardar histÃ³rico.", "error");
       }
     }
 
     // ==== FUNCIONES AUXILIARES Y HELPERS ====
+    function getEntriesForMonth(month) { return (APP_STATE[APP_STATE.activeWorkspace].history || []).filter(e => String(e.workDate || '').slice(0, 7) === month) }
+    function summarizeMonth(entries) {
+      const examStats = {}; let totalBase = 0, totalPayment = 0, totalRows = 0;
+      entries.forEach(e => {
+        totalBase += e.totalBase || 0; totalPayment += e.totalPayment || 0; totalRows += e.totalRows || 0;
+        (e.rows || []).forEach(r => {
+          if (r.matched) {
+            if (!examStats[r.label]) examStats[r.label] = { count: 0, base: 0, payment: 0 };
+            examStats[r.label].count += 1; examStats[r.label].base += r.base; examStats[r.label].payment += r.payment || 0;
+          }
+        })
+      });
+      return { totalBase, totalPayment, totalRows, sortedExams: Object.entries(examStats).sort((a, b) => b[1].payment - a[1].payment).map(e => ({ label: e[0], count: e[1].count, base: e[1].base, payment: e[1].payment })) }
+    }
+    function projectMonth(totalPayment, dayCount, month) { if (!dayCount) return 0; const [year, monthNumber] = month.split('-').map(Number); const daysInMonth = new Date(year, monthNumber, 0).getDate(); const cutoff = month === currentMonth() ? new Date().getDate() : daysInMonth; return (totalPayment / dayCount) * cutoff; }
     function todayISO() { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}` }
     function currentMonth() { return todayISO().slice(0, 7) }
     function monthFromDate(v) { return String(v || '').slice(0, 7) }
@@ -2177,13 +2205,9 @@
     function formatPercent(v) { return `${Number(v).toLocaleString('es-CL', { maximumFractionDigits: 1 })}%` }
     function prettyDate(s) { if (!s) return '-'; const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric' }) }
     function prettyMonth(s) { if (!s) return ''; const [y, m] = s.split('-').map(Number); return new Date(y, m - 1, 1).toLocaleDateString('es-CL', { month: 'long', year: 'numeric' }) }
-    function escapeAttribute(v) { return escapeHtml(v).replace(/"/g, '&quot;') }
     function escapeHtml(v) { return String(v || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
-    function todayISO() { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}` }
     function normalizeStr(s) { return String(s || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim(); }
-
     function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
   </script>
 </body>
-
 </html>
