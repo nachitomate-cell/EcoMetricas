@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0d7c6e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>Eco Métricas - SaaS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #10131a;
+      --paper: #f6f2ea;
+      --card: #fff;
+      --cream: #eee7da;
+      --teal: #0d7c6e;
+      --teal-soft: #e3f4f1;
+      --amber: #c9820a;
+      --amber-soft: #fff3df;
+      --red: #bb3d2a;
+      --red-soft: #fdecea;
+      --slate: #69707a;
+      --border: #d8d0c1;
+      --burnt: #b5451b;
+      --shadow: 0 10px 30px rgba(16, 19, 26, .08);
+      --sidebar-width: 250px;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 220px 220px;
+      opacity: .45;
+      z-index: 9999
+    }
+
+    /* Pantallas Auth */
+    #login-screen,
+    #inactive-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--paper);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100000;
+    }
+
+    .login-card {
+      background: #fff;
+      padding: 3rem;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .google-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 1.5rem;
+    }
+
+    .google-btn:hover {
+      background: #f8f9fa;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Layout App */
+    #app-layout {
+      display: none;
+      width: 100%;
+    }
+
+    aside {
+      width: var(--sidebar-width);
+      background: #10131af2;
+      color: #f6f2ea;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      border-right: 3px solid var(--teal);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      padding: 1.5rem 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.35rem;
+      margin-bottom: 2.5rem;
+      padding: 0 0.5rem;
+    }
+
+    .logo-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #2ad1bd;
+      display: inline-block
+    }
+
+    .nav-item {
+      padding: 0.9rem 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #a0a5af;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    .nav-item.active {
+      background: var(--teal);
+      color: #fff;
+      font-weight: 500;
+    }
+
+    main {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 2rem 3rem;
+      max-width: calc(1400px + var(--sidebar-width));
+      display: flex;
+      flex-direction: column;
+    }
+
+    .view-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* UI Elements */
+    #subnav {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-subnav {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.6rem 1.2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: var(--slate);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s;
+    }
+
+    .btn-subnav:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .btn-subnav.active {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #fff;
+      font-weight: 500;
+      box-shadow: 0 4px 10px rgba(13, 124, 110, 0.2);
+    }
+
+    .workspace-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 1rem;
+      position: relative;
+    }
+
+    .workspace-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      color: var(--ink);
+      margin: 0;
+      line-height: 1;
+    }
+
+    .workspace-badge {
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: help;
+    }
+
+    .card,
+    .metric {
+      background: #fffc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      padding: 1.5rem
+    }
+
+    .card::before,
+    .metric::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--teal), rgba(13, 124, 110, .12))
+    }
+
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--slate);
+      margin-bottom: .5rem
+    }
+
+    .title,
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      margin: 0;
+      color: var(--ink)
+    }
+
+    .title {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      margin-bottom: 1rem
+    }
+
+    .grid-top {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1.5rem
+    }
+
+    .fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .75rem;
+      margin: 1rem 0
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: .35rem
+    }
+
+    .field label {
+      font-family: 'DM Mono', monospace;
+      font-size: .7rem;
+      text-transform: uppercase;
+      color: var(--slate)
+    }
+
+    /* Inputs fixes para iOS */
+    input,
+    button,
+    select {
+      font: inherit
+    }
+
+    input[type=text],
+    input[type=number],
+    input[type=date],
+    input[type=month],
+    select {
+      width: 100%;
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .6rem .75rem;
+      outline: none;
+      font-size: 16px;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(13, 124, 110, .12)
+    }
+
+    .upload {
+      border: 2px dashed var(--border);
+      border-radius: 14px;
+      background: var(--cream);
+      padding: 2rem 1rem;
+      text-align: center;
+      position: relative;
+      cursor: pointer
+    }
+
+    .upload:hover,
+    .upload.drag-over {
+      border-color: var(--teal);
+      background: var(--teal-soft)
+    }
+
+    .upload input[type=file] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer
+    }
+
+    .row {
+      display: flex;
+      gap: .7rem;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+      padding: .24rem .55rem;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      border: 1px solid rgba(13, 124, 110, .18)
+    }
+
+    .btn,
+    .btn-ghost,
+    .btn-soft,
+    .btn-danger {
+      border-radius: 8px;
+      padding: .6rem 1rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      font-family: 'DM Mono', monospace;
+      font-size: .74rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .3rem
+    }
+
+    .btn {
+      background: var(--teal);
+      color: #fff
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--teal);
+      border-color: rgba(13, 124, 110, .45)
+    }
+
+    .btn-soft {
+      background: var(--teal-soft);
+      color: var(--teal)
+    }
+
+    .btn-danger {
+      background: var(--red-soft);
+      color: var(--red);
+      border-color: rgba(187, 61, 42, .18)
+    }
+
+    .alert {
+      display: flex;
+      gap: .6rem;
+      align-items: flex-start;
+      padding: .9rem 1rem;
+      border-radius: 10px;
+      font-size: .82rem;
+      margin-top: .85rem
+    }
+
+    .alert-error {
+      background: var(--red-soft);
+      border: 1px solid rgba(187, 61, 42, .18);
+      color: var(--red)
+    }
+
+    .alert-warn {
+      background: var(--amber-soft);
+      border: 1px solid rgba(201, 130, 10, .22);
+      color: var(--amber)
+    }
+
+    .alert-ok {
+      background: var(--teal-soft);
+      border: 1px solid rgba(13, 124, 110, .2);
+      color: var(--teal)
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem
+    }
+
+    .metric::before {
+      background: var(--teal)
+    }
+
+    .metric.amber::before {
+      background: var(--amber)
+    }
+
+    .metric.ink::before {
+      background: var(--ink)
+    }
+
+    .metric.burnt::before {
+      background: var(--burnt)
+    }
+
+    .metric-label {
+      font-family: 'DM Mono', monospace;
+      font-size: .68rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: .45rem
+    }
+
+    .metric-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      line-height: 1.04
+    }
+
+    .metric-sub {
+      font-family: 'DM Mono', monospace;
+      color: var(--slate);
+      font-size: .73rem;
+      margin-top: .5rem;
+      line-height: 1.55
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem
+    }
+
+    .chart-wrap {
+      position: relative;
+      min-height: 300px
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .83rem
+    }
+
+    .table th {
+      background: var(--ink);
+      color: #f6f2ea;
+      font-family: 'DM Mono', monospace;
+      font-size: .65rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .7rem .85rem;
+      text-align: left;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .table td {
+      padding: .72rem .85rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle
+    }
+
+    .table tr:last-child td {
+      border-bottom: none
+    }
+
+    .table tr:hover {
+      background: rgba(13, 124, 110, .04)
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .2rem;
+      padding: .18rem .45rem;
+      border-radius: 999px;
+      line-height: 1.2;
+      white-space: nowrap
+    }
+
+    .pill.value {
+      background: var(--teal-soft);
+      color: var(--teal)
+    }
+
+    .pill.warn {
+      background: var(--amber-soft);
+      color: var(--burnt)
+    }
+
+    .pill.zero {
+      background: #f1eee7;
+      color: var(--slate)
+    }
+
+    .empty {
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      background: #fbf8f2;
+      color: var(--slate);
+      font-size: .86rem
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem
+    }
+
+    .rules {
+      display: grid;
+      gap: .85rem;
+      margin-top: 1rem
+    }
+
+    .rule {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      background: #fffdfa
+    }
+
+    .rule-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr .6fr auto;
+      gap: .7rem;
+      align-items: end
+    }
+
+    @media(max-width:1180px) {
+
+      .grid-top,
+      .two-col,
+      .config-grid {
+        grid-template-columns: 1fr
+      }
+
+      .summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+    }
+
+    /* 🔥 OPTIMIZACIÓN MÓVIL (PWA) 🔥 */
+    @media(max-width:840px) {
+      body {
+        flex-direction: column;
+      }
+
+      aside {
+        position: fixed;
+        bottom: 0;
+        top: auto;
+        left: 0;
+        width: 100%;
+        height: 65px;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0;
+        z-index: 9999;
+        border-right: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: #10131a;
+      }
+
+      .logo {
+        display: none;
+      }
+
+      aside>div:last-child {
+        display: none;
+      }
+
+      .nav-item {
+        flex-direction: column;
+        gap: 2px;
+        padding: 5px;
+        margin: 0;
+        font-size: 0.6rem;
+        background: transparent;
+        justify-content: center;
+      }
+
+      .nav-icon {
+        font-size: 1.4rem;
+      }
+
+      main {
+        margin-left: 0;
+        padding: 1rem 1rem 80px 1rem;
+        max-width: 100%;
+      }
+
+      #subnav {
+        overflow-x: auto;
+        white-space: nowrap;
+        flex-wrap: nowrap;
+        padding-bottom: 5px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .card {
+        padding: 1rem;
+      }
+
+      .fields,
+      .summary,
+      .rule-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    #toast-container {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    @media(max-width:840px) {
+      #toast-container {
+        right: 10px;
+        left: 10px;
+        bottom: 75px;
+      }
+    }
+
+    .toast {
+      background: var(--teal);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      font-weight: 500;
+      font-size: 0.9rem;
+      animation: slideIn 0.3s ease forwards;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    #offline-banner {
+      display: none;
+      background: var(--burnt);
+      color: #fff;
+      text-align: center;
+      padding: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: 'DM Mono', monospace;
+      z-index: 99999;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(16, 19, 26, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-box {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    #cloud-loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      flex-direction: column;
+      font-family: 'DM Sans';
+      color: var(--teal);
+    }
+
+    .spinner {
+      border: 4px solid rgba(13, 124, 110, 0.2);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border-left-color: var(--teal);
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .user-profile {
+      position: absolute;
+      right: 0;
+      top: -10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-profile img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--teal-soft);
+    }
+
+    @media(max-width:840px) {
+      .user-profile {
+        position: relative;
+        top: 0;
+        margin-top: 1rem;
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .workspace-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="offline-banner">⚠️ SIN CONEXIÓN — Trabajando localmente. Se sincronizará al volver a estar online.</div>
+
+  <div id="cloud-loading">
+    <div class="spinner"></div>
+    <h2 style="font-family:'DM Serif Display'; font-size:1.5rem; color:var(--ink); margin:0;">Iniciando Sistema...</h2>
+    <button id="retry-btn" class="btn-ghost" style="margin-top: 1rem; display: none;"
+      onclick="location.reload()">Reintentar conexión</button>
+  </div>
+
+  <div class="modal-overlay" id="confirm-modal">
+    <div class="modal-box">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🗑️</div>
+      <h2 class="title" style="font-size: 1.4rem;">¿Seguro que deseas borrar?</h2>
+      <p class="copy" style="margin-bottom: 1.5rem;" id="confirm-text">Esta acción no se puede deshacer.</p>
+      <div class="row" style="justify-content: center; gap: 1rem;">
+        <button class="btn-ghost" onclick="closeModal()">Cancelar</button>
+        <button class="btn-danger" id="confirm-yes-btn">Sí, borrar todo</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <div id="login-screen">
+    <div class="login-card">
+      <div class="logo" style="justify-content: center; font-size: 2rem; margin-bottom: 1rem;"><span
+          class="logo-dot"></span>Eco Métricas</div>
+      <p class="copy" style="margin-bottom: 2rem;">Sistema de gestión financiera para Tecnólogos Médicos.</p>
+      <button class="google-btn" onclick="loginGoogle()">
+        <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+          <path fill="#FFC107"
+            d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
+          <path fill="#FF3D00"
+            d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
+          <path fill="#4CAF50"
+            d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
+          <path fill="#1976D2"
+            d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
+        </svg>
+        Iniciar sesión con Google
+      </button>
+    </div>
+  </div>
+
+  <div id="inactive-screen" style="display:none;">
+    <div class="login-card">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+      <h2 class="title" style="font-size: 1.6rem; color: var(--burnt);">Suscripción Inactiva</h2>
+      <p class="copy" style="margin-bottom: 0.5rem; font-size: 0.9rem;">El correo con el que intentaste ingresar no está
+        en la lista de usuarios autorizados:</p>
+      <div id="user-email-display"
+        style="font-family: 'DM Mono'; font-weight: bold; color: var(--teal); margin-bottom: 1.5rem; word-break: break-all;">
+        correo@gmail.com</div>
+      <p class="copy" style="margin-bottom: 2rem; font-size: 0.85rem;">Para adquirir tu suscripción mensual o activar tu
+        cuenta, por favor contacta al administrador del sistema.</p>
+      <button class="btn-ghost" onclick="logout()" style="width: 100%;">Cerrar Sesión</button>
+    </div>
+  </div>
+
+  <div id="app-layout">
+    <aside>
+      <div class="logo"><span class="logo-dot"></span>Eco Métricas</div>
+      <div class="nav-item active" id="nav-medicenter" onclick="switchWorkspace('medicenter')">
+        <span class="nav-icon">🏢</span> MediCenter
+      </div>
+      <div class="nav-item" id="nav-vinamed" onclick="switchWorkspace('vinamed')">
+        <span class="nav-icon">🏥</span> ViñaMed
+      </div>
+
+      <div style="margin: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);"></div>
+
+      <div class="nav-item" id="nav-config" onclick="switchWorkspace('config')">
+        <span class="nav-icon">⚙️</span> Configuración
+      </div>
+
+      <div style="margin-top: auto; padding-top: 2rem; text-align: center;">
+        <p style="font-family: 'DM Mono'; font-size: 0.65rem; color: #69707a;">v6.6 Final</p>
+      </div>
+    </aside>
+
+    <main>
+      <div id="workspace-header" class="workspace-header">
+        <div>
+          <div class="eyebrow" id="ws-eyebrow">Entorno de trabajo sincronizado</div>
+          <h1 class="workspace-title" id="ws-title">MediCenter</h1>
+        </div>
+        <div class="user-profile">
+          <span class="workspace-badge" id="ws-badge" title="Progreso de la meta mensual">Meta: 0%</span>
+          <img id="user-avatar" src="" alt="User" />
+          <button class="btn-ghost" style="padding: 0.4rem; font-size: 0.7rem;" onclick="logout()">Salir</button>
+        </div>
+      </div>
+
+      <div id="subnav">
+        <button class="btn-subnav active" id="subnav-main" onclick="switchSubTab('main')">📊 Panel Principal</button>
+        <button class="btn-subnav" id="subnav-history" onclick="switchSubTab('history')">📅 Historial Mensual</button>
+        <button class="btn-subnav" id="subnav-control" onclick="switchSubTab('control')">⚠️ Control de Errores</button>
+      </div>
+
+      <div id="view-main" class="view-section active">
+        <div id="unmatched-banner"
+          style="display:none; background: var(--red-soft); border: 1px solid rgba(187,61,42,.18); color: var(--red); padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; font-weight: 500;">
+          ⚠️ <span id="unmatched-count">0</span> exámenes sin tarifa detectados. Revisa la Configuración para no perder
+          dinero.
+        </div>
+
+        <div class="grid-top">
+          <section id="upload-panel" class="card">
+            <h1 class="section-title">Calculadora Diaria</h1>
+            <p class="copy">Arrastra la planilla del día para procesarla y guardarla en la nube.</p>
+            <div class="fields">
+              <div class="field">
+                <label>Fecha de atención (DD/MM/AÑO)</label>
+                <div style="display:flex; gap:0.4rem; align-items:center;">
+                  <button class="btn-soft" type="button" onclick="changeDay(-1)"
+                    style="padding:0.6rem 0.8rem; font-size:1rem;" title="Día anterior">◀</button>
+                  <input id="work-date" type="date"
+                    style="flex:1; text-align:center; font-family:'DM Mono', monospace; padding:0.6rem;"
+                    onchange="loadDataForCurrentDate()" />
+                  <button class="btn-soft" type="button" onclick="changeDay(1)"
+                    style="padding:0.6rem 0.8rem; font-size:1rem;" title="Día siguiente">▶</button>
+                </div>
+              </div>
+              <div class="field"><label>Porcentaje (%)</label><input id="payment-percent" type="number" min="0"
+                  max="100" step="0.1" /></div>
+            </div>
+            <div class="upload" id="upload-zone">
+              <input type="file" id="file-input" accept=".csv,.xlsx,.xls" />
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                style="color:var(--teal);margin:0 auto 1rem;">
+                <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              <p style="font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--ink);margin:0 0 .6rem;">
+                Arrastra el archivo aquí</p>
+              <div class="row" style="justify-content:center;"><span class="chip">XLSX</span><span
+                  class="chip">CSV</span></div>
+            </div>
+            <div id="inference-box"></div>
+            <div id="upload-feedback"></div>
+          </section>
+
+          <section id="actions-panel" class="card">
+            <div class="eyebrow">Resumen Rápido</div>
+            <h2 class="title" id="daily-title-display">Tu día cargado</h2>
+            <div style="margin-top: 1.5rem;">
+              <div class="metric">
+                <div class="metric-label">Pago estimado diario</div>
+                <div class="metric-value" id="daily-payment" style="color: var(--teal);">$0</div>
+                <div class="metric-sub" id="daily-payment-copy">Carga un archivo.</div>
+              </div>
+              <div class="metrics" style="grid-template-columns: 1fr 1fr; margin-top: 1rem;">
+                <div class="metric amber" style="padding: 1rem;">
+                  <div class="metric-label">Valor base</div>
+                  <div class="metric-value" id="daily-base" style="font-size: 1.4rem;">$0</div>
+                </div>
+                <div class="metric ink" style="padding: 1rem;">
+                  <div class="metric-label">Pacientes hoy</div>
+                  <div class="metric-value" id="daily-patients" style="font-size: 1.4rem;">0</div>
+                </div>
+              </div>
+              <div class="metric burnt" style="margin-top: 1rem; padding: 1rem;">
+                <div class="metric-label">Examen Top</div>
+                <div class="metric-value" id="daily-top-exam" style="font-size:1.1rem;line-height:1.3;">-</div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+          <div
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+            <h3 class="section-title" style="margin:0;">Detalle de Atenciones del Día</h3>
+            <input id="daily-search" type="text" placeholder="Buscar paciente o examen..."
+              style="width:100%; max-width: 280px; padding:0.4rem 0.8rem; font-size:0.8rem; font-family:'DM Mono',monospace;"
+              oninput="renderCurrentSummary()">
+          </div>
+          <div class="table-wrap" style="max-height: 400px;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Paciente</th>
+                  <th>Examen Original</th>
+                  <th>Regla Aplicada</th>
+                  <th>Pago ($)</th>
+                </tr>
+              </thead>
+              <tbody id="daily-detail-tbody">
+                <tr>
+                  <td colspan="4">
+                    <div class="empty">Carga un archivo para ver los pacientes.</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-history" class="view-section">
+        <div class="panel-title"
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+          <h2 class="title" style="margin:0;">Consolidado Mensual</h2>
+          <div class="row">
+            <div class="field" style="margin:0; flex-direction:row; align-items:center;"><label>Mes:</label><input
+                id="month-selector" type="month" style="width:auto; padding:0.4rem;" /></div>
+            <button class="btn" id="export-pdf-btn" type="button" onclick="exportMonthlyPDF()">📄 Descargar PDF</button>
+            <button class="btn-soft" id="export-month-xlsx-btn" type="button">📊 Excel</button>
+          </div>
+        </div>
+
+        <div id="pdf-export-area">
+          <div class="summary">
+            <div class="metric">
+              <div class="metric-label">Ganancia Acumulada</div>
+              <div class="metric-value" id="month-total" style="color: var(--teal);">$0</div>
+              <div class="metric-sub" id="month-total-copy">-</div>
+            </div>
+            <div class="metric amber">
+              <div class="metric-label">Días trabajados</div>
+              <div class="metric-value" id="month-days">0</div>
+              <div class="metric-sub" id="month-average-copy">-</div>
+            </div>
+            <div class="metric ink">
+              <div class="metric-label">Proyección Fin de Mes (Normal)</div>
+              <div class="metric-value" id="month-goal-gap">$0</div>
+              <div class="metric-sub" id="month-projection-copy">-</div>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div class="card">
+              <div class="panel-title" style="margin-bottom: 0;">
+                <h3 class="section-title" style="margin:0;">Gráfico de Prestaciones</h3>
+                <span class="chip" id="month-days-chip">0 días</span>
+              </div>
+              <div class="chart-wrap"><canvas id="month-chart"></canvas></div>
+            </div>
+
+            <div class="card" style="border-color: var(--teal);">
+              <h3 class="section-title" style="color: var(--teal);">Desglose Financiero Top</h3>
+              <p class="subtle" style="margin-top:-0.5rem; margin-bottom:1rem;">Ordenado de mayor a menor ganancia.</p>
+              <div class="table-wrap" style="max-height: 300px;">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Prestación</th>
+                      <th>Cant.</th>
+                      <th>A Pago</th>
+                    </tr>
+                  </thead>
+                  <tbody id="month-breakdown-tbody">
+                    <tr>
+                      <td colspan="3">
+                        <div class="empty">No hay datos financieros este mes.</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 1.5rem;">
+            <h3 class="section-title">Días Faltantes</h3>
+            <p class="subtle" style="margin-top:-0.5rem; margin-bottom:1rem;">Según los días laborales configurados.</p>
+            <div id="missing-days-list" class="empty">Aún no hay fechas evaluadas.</div>
+          </div>
+        </div>
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="panel-title"
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <h3 class="section-title" style="margin:0;">Historial Diario</h3>
+            <button class="btn-danger" type="button" onclick="confirmDeleteMonth()">Borrar todo el mes</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Archivo</th>
+                  <th>Atenciones</th>
+                  <th>A Pago</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="history-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-control" class="view-section">
+        <div class="panel-title"
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <div>
+            <h1 class="title">Control de Descartes</h1>
+            <p class="copy">Filas del último archivo que fueron ignoradas en este centro.</p>
+          </div>
+          <span class="badge" style="background:var(--burnt);" id="discard-chip">0 descartes</span>
+        </div>
+
+        <div class="summary">
+          <div class="metric burnt">
+            <div class="metric-label">Estado distinto</div>
+            <div class="metric-value" id="discard-state">0</div>
+            <div class="metric-sub">No dicen "Fin de Atención".</div>
+          </div>
+          <div class="metric amber">
+            <div class="metric-label">Datos incompletos</div>
+            <div class="metric-value" id="discard-missing">0</div>
+            <div class="metric-sub">Falta paciente o examen.</div>
+          </div>
+          <div class="metric ink">
+            <div class="metric-label">Filas vacías</div>
+            <div class="metric-value" id="discard-empty">0</div>
+            <div class="metric-sub">Líneas en blanco en el Excel.</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+          <h3 class="section-title">Detalle de las filas ignoradas</h3>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Fila original</th>
+                  <th>Motivo</th>
+                  <th>Estado leído</th>
+                  <th>Paciente</th>
+                  <th>Examen leído</th>
+                </tr>
+              </thead>
+              <tbody id="discard-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-config" class="view-section">
+        <div class="card" style="background: var(--teal-soft); border-color: var(--teal); margin-bottom: 1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h3 class="section-title" style="margin:0; color:var(--teal);">Ajustes por Centro Médico</h3>
+              <p class="subtle" style="color:var(--teal);">Selecciona qué centro deseas configurar.</p>
+            </div>
+            <select id="config-center-select" onchange="renderConfig()" style="max-width: 250px; font-weight: 600;">
+              <option value="medicenter">🏢 Configurar MediCenter</option>
+              <option value="vinamed">🏥 Configurar ViñaMed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="config-grid">
+          <div class="card">
+            <h3 class="section-title">Parámetros Globales del Centro</h3>
+            <div class="fields">
+              <div class="field"><label>Porcentaje de ganancia (%)</label><input id="settings-default-percent"
+                  type="number" min="0" max="100" step="0.1" /></div>
+              <div class="field"><label>Meta mensual (CLP)</label><input id="settings-month-goal" type="number" min="0"
+                  step="1000" /></div>
+            </div>
+
+            <h3 class="section-title" style="margin-top: 1.5rem; font-size: 1rem;">Mapeo de Columnas Excel</h3>
+            <p class="subtle">Si tus columnas tienen nombres raros (ej: "Paciente / Social"), no te preocupes. Escribe
+              aquí solo la palabra clave (ej: "paciente") y el sistema será lo suficientemente inteligente para
+              encontrarla.</p>
+            <div class="fields">
+              <div class="field"><label>Palabra clave Estado</label><input id="map-estado" type="text"
+                  placeholder="Ej: estado" /></div>
+              <div class="field"><label>Palabra clave Paciente</label><input id="map-paciente" type="text"
+                  placeholder="Ej: paciente" /></div>
+              <div class="field"><label>Palabra clave Examen</label><input id="map-examen" type="text"
+                  placeholder="Ej: examen" /></div>
+              <div class="field"><label>Palabra clave Fecha</label><input id="map-fecha" type="text"
+                  placeholder="Ej: fecha" /></div>
+            </div>
+
+            <div class="field" style="margin-top:1.5rem;">
+              <label>Días Laborales (Para cálculo de días faltantes)</label>
+              <div class="row" id="workdays-checkboxes">
+                <label><input type="checkbox" value="1" class="wd-chk"> Lu</label>
+                <label><input type="checkbox" value="2" class="wd-chk"> Ma</label>
+                <label><input type="checkbox" value="3" class="wd-chk"> Mi</label>
+                <label><input type="checkbox" value="4" class="wd-chk"> Ju</label>
+                <label><input type="checkbox" value="5" class="wd-chk"> Vi</label>
+                <label><input type="checkbox" value="6" class="wd-chk"> Sá</label>
+                <label><input type="checkbox" value="0" class="wd-chk"> Do</label>
+              </div>
+            </div>
+
+            <div class="row mt-4" style="margin-top: 1.5rem;"><button class="btn" id="save-settings-btn"
+                type="button">Guardar Parámetros</button></div>
+          </div>
+
+          <div class="card">
+            <div class="panel-title"
+              style="margin-bottom: 0; display:flex; justify-content:space-between; align-items:center;">
+              <h3 class="section-title" style="margin:0;">Diccionario de Precios</h3>
+              <div class="row">
+                <button class="btn-soft" id="add-rule-btn" type="button">+ Nueva Regla</button>
+                <button class="btn-ghost" id="restore-defaults-btn" type="button">Restaurar Arancel</button>
+              </div>
+            </div>
+            <p class="subtle" style="margin-bottom: 1rem;">Usa el símbolo <code>|</code> para separar variantes (Ej:
+              ABDOMINAL|ABDOMEN).</p>
+            <div class="rules" id="rules-container"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // 🔥🔥🔥 FIREBASE CONFIG 🔥🔥🔥
+    const firebaseConfig = {
+      apiKey: "AIzaSyALBzBA_mtJ_iDDrHOfex5-8PUI7HaCgbk",
+      authDomain: "eco-metricas.firebaseapp.com",
+      projectId: "eco-metricas",
+      storageBucket: "eco-metricas.firebasestorage.app",
+      messagingSenderId: "556047242817",
+      appId: "1:556047242817:web:d81fc9070e2beeca7898c0"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    let CURRENT_USER = null;
+    let DOC_REF = null;
+
+    // ESTADO GLOBAL Y UTILIDADES
+    function uid() { return 'id-' + Math.random().toString(36).slice(2, 10) }
+    function clone(v) { return JSON.parse(JSON.stringify(v)) }
+    function emptyDiscardStats() { return { empty: 0, state: 0, missing: 0, details: [] } }
+
+    // Configuramos de inmediato el mapeo con los nombres que usa tu HIS para que no tengas que escribir nada
+    const DEFAULT_MAP = { estado: 'Estado', paciente: 'Paciente / Social', examen: 'Examen o # Examenes lab.', fecha: 'fecha' };
+
+    const DEFAULT_RULES_N1 = [
+      { id: uid(), aliases: 'VASOS PLACENTARIOS|DOPPLER PLACENTARIO|DOPPLER OBSTETRICO', label: 'Eco Doppler Vasos Placentarios', base: 63040 },
+      { id: uid(), aliases: 'DOPPLER ABDOMINAL|DOPPLER VASOS TESTICULARES|DOPPLER TESTICULAR', label: 'Eco Doppler Abdominal / Testicular', base: 64960 },
+      { id: uid(), aliases: 'VASOS DEL CUELLO|DOPPLER CUELLO|CAROTIDEO|CAROTIDEA|DOPPLER CAROTIDEO', label: 'Eco Doppler Vasos del Cuello', base: 59530 },
+      { id: uid(), aliases: 'TRANSCRANEANA|DOPPLER TRANSCRANEANO', label: 'Eco Doppler Transcraneano', base: 63040 },
+      { id: uid(), aliases: 'VASCULAR PERIFERICA|DOPPLER VASCULAR|DOPPLER PERIFERICO|DOPPLER VENOSO|DOPPLER ARTERIAL|DOPPLER EXTREMIDADES', label: 'Eco Doppler Vascular Periférica', base: 63040 },
+      { id: uid(), aliases: 'SEGUIMIENTO DE OVULACION TRANSVAGINAL|SEGUIMIENTO OVULACION TRANSVAGINAL', label: 'Eco Seguim. Ovulación Transvaginal', base: 21410 },
+      { id: uid(), aliases: 'SEGUIMIENTO DE OVULACION|SEGUIMIENTO OVULACION', label: 'Eco Seguimiento Ovulación', base: 23980 },
+      { id: uid(), aliases: 'TRANSVAGINAL|TRANSRECTAL', label: 'Eco Transvaginal / Transrectal', base: 15400 },
+      { id: uid(), aliases: 'OBSTETRICA|OBSTÉTRICA', label: 'Eco Obstétrica', base: 8730 },
+      { id: uid(), aliases: 'GINECOLOGICA|PELVIANA FEMENINA|PELVICA FEMENINA', label: 'Eco Ginecológica / Pelviana', base: 14670 },
+      { id: uid(), aliases: 'PELVICA MASCULINA|PELVIANA MASCULINA|VEJIGA Y PROSTATA', label: 'Eco Pélvica Masculina', base: 15330 },
+      { id: uid(), aliases: 'RENAL|BAZO', label: 'Eco Renal / Bazo', base: 19110 },
+      { id: uid(), aliases: 'ENCEFALICA|ENCEFALO|CEREBRAL', label: 'Eco Encefálica', base: 20630 },
+      { id: uid(), aliases: 'MAMARIA|MAMAS', label: 'Eco Mamaria', base: 19210 },
+      { id: uid(), aliases: 'OCULAR|OJO', label: 'Eco Ocular', base: 22290 },
+      { id: uid(), aliases: 'TESTICULAR|TESTICULOS|ESCROTAL', label: 'Eco Testicular', base: 18960 },
+      { id: uid(), aliases: 'TIROIDEA|TIROIDES|CUELLO TIROIDES', label: 'Eco Tiroidea', base: 19210 },
+      { id: uid(), aliases: 'PARTES BLANDAS|MUSCULOESQUELETICA|ARTICULAR|HOMBRO|RODILLA|CODO|TOBILLO|MUÑECA|PIE|MANO|CADERA|MUSCULAR', label: 'Eco Partes Blandas / MSK', base: 19210 },
+      { id: uid(), aliases: 'ABDOMINAL|ABDOMEN', label: 'Eco Abdominal', base: 27570 },
+      { id: uid(), aliases: 'APOYO A CIRUGIA|APOYO A PROCEDIMIENTO|ECOGRAFIA INTRAOPERATORIA', label: 'Eco Apoyo Cirugía', base: 17040 }
+    ];
+
+    const DEFAULT_RULES_N2 = [
+      { id: uid(), aliases: 'VASOS PLACENTARIOS|DOPPLER PLACENTARIO|DOPPLER OBSTETRICO', label: 'Eco Doppler Vasos Placentarios', base: 81950 },
+      { id: uid(), aliases: 'DOPPLER ABDOMINAL|DOPPLER VASOS TESTICULARES|DOPPLER TESTICULAR', label: 'Eco Doppler Abdominal / Testicular', base: 84450 },
+      { id: uid(), aliases: 'VASOS DEL CUELLO|DOPPLER CUELLO|CAROTIDEO|CAROTIDEA|DOPPLER CAROTIDEO', label: 'Eco Doppler Vasos del Cuello', base: 77390 },
+      { id: uid(), aliases: 'TRANSCRANEANA|DOPPLER TRANSCRANEANO', label: 'Eco Doppler Transcraneano', base: 81950 },
+      { id: uid(), aliases: 'VASCULAR PERIFERICA|DOPPLER VASCULAR|DOPPLER PERIFERICO|DOPPLER VENOSO|DOPPLER ARTERIAL|DOPPLER EXTREMIDADES', label: 'Eco Doppler Vascular Periférica', base: 81950 },
+      { id: uid(), aliases: 'SEGUIMIENTO DE OVULACION TRANSVAGINAL|SEGUIMIENTO OVULACION TRANSVAGINAL', label: 'Eco Seguim. Ovulación Transvaginal', base: 27830 },
+      { id: uid(), aliases: 'SEGUIMIENTO DE OVULACION|SEGUIMIENTO OVULACION', label: 'Eco Seguimiento Ovulación', base: 31170 },
+      { id: uid(), aliases: 'TRANSVAGINAL|TRANSRECTAL', label: 'Eco Transvaginal / Transrectal', base: 20020 },
+      { id: uid(), aliases: 'OBSTETRICA|OBSTÉTRICA', label: 'Eco Obstétrica', base: 11350 },
+      { id: uid(), aliases: 'GINECOLOGICA|PELVIANA FEMENINA|PELVICA FEMENINA', label: 'Eco Ginecológica / Pelviana', base: 19070 },
+      { id: uid(), aliases: 'PELVICA MASCULINA|PELVIANA MASCULINA|VEJIGA Y PROSTATA', label: 'Eco Pélvica Masculina', base: 19930 },
+      { id: uid(), aliases: 'RENAL|BAZO', label: 'Eco Renal / Bazo', base: 24840 },
+      { id: uid(), aliases: 'ENCEFALICA|ENCEFALO|CEREBRAL', label: 'Eco Encefálica', base: 26820 },
+      { id: uid(), aliases: 'MAMARIA|MAMAS', label: 'Eco Mamaria', base: 24970 },
+      { id: uid(), aliases: 'OCULAR|OJO', label: 'Eco Ocular', base: 28980 },
+      { id: uid(), aliases: 'TESTICULAR|TESTICULOS|ESCROTAL', label: 'Eco Testicular', base: 24650 },
+      { id: uid(), aliases: 'TIROIDEA|TIROIDES|CUELLO TIROIDES', label: 'Eco Tiroidea', base: 24970 },
+      { id: uid(), aliases: 'PARTES BLANDAS|MUSCULOESQUELETICA|ARTICULAR|HOMBRO|RODILLA|CODO|TOBILLO|MUÑECA|PIE|MANO|CADERA|MUSCULAR', label: 'Eco Partes Blandas / MSK', base: 24970 },
+      { id: uid(), aliases: 'ABDOMINAL|ABDOMEN', label: 'Eco Abdominal', base: 35840 },
+      { id: uid(), aliases: 'APOYO A CIRUGIA|APOYO A PROCEDIMIENTO|ECOGRAFIA INTRAOPERATORIA', label: 'Eco Apoyo Cirugía', base: 22150 }
+    ];
+
+    let APP_STATE = {
+      activeWorkspace: 'medicenter',
+      activeSubTab: 'main',
+      selectedMonth: currentMonth(),
+      medicenter: { settings: { percent: 37, monthlyGoal: 0, workDays: [1, 2, 3, 4, 5, 6], priceRules: clone(DEFAULT_RULES_N1), columnMap: clone(DEFAULT_MAP) }, history: [], currentRows: [], currentSummary: null, currentDiscardStats: emptyDiscardStats(), currentFileName: '' },
+      vinamed: { settings: { percent: 100, monthlyGoal: 0, workDays: [1, 2, 3, 4, 5, 6], priceRules: clone(DEFAULT_RULES_N2), columnMap: clone(DEFAULT_MAP) }, history: [], currentRows: [], currentSummary: null, currentDiscardStats: emptyDiscardStats(), currentFileName: '' }
+    };
+
+    const UI = {
+      zone: document.getElementById('upload-zone'),
+      fileInput: document.getElementById('file-input'),
+      workDateInput: document.getElementById('work-date'),
+      percentInput: document.getElementById('payment-percent'),
+      monthSelectorInput: document.getElementById('month-selector'),
+      uploadFeedback: document.getElementById('upload-feedback'),
+      wsTitle: document.getElementById('ws-title'),
+      wsBadge: document.getElementById('ws-badge')
+    };
+
+    let chartInstance = null;
+    let isOffline = !navigator.onLine;
+
+    // ==== SISTEMA DE AUTH, LISTA BLANCA Y MIGRACIÓN ====
+    auth.onAuthStateChanged(async (user) => {
+      const loader = document.getElementById('cloud-loading');
+      if (user) {
+        CURRENT_USER = user;
+
+        try {
+          const whitelistRef = db.collection("app_data").doc("whitelist");
+          const whitelistSnap = await whitelistRef.get();
+          let isAllowed = false;
+
+          if (whitelistSnap.exists) {
+            const allowedEmails = whitelistSnap.data().emails || [];
+            if (allowedEmails.includes(user.email)) isAllowed = true;
+          } else {
+            await whitelistRef.set({ emails: [user.email] });
+            isAllowed = true;
+            showToast("¡Lista blanca inicializada con éxito!", "ok");
+          }
+
+          if (!isAllowed) {
+            document.getElementById('user-email-display').textContent = user.email;
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-layout').style.display = 'none';
+            document.getElementById('inactive-screen').style.display = 'flex';
+            loader.style.display = 'none';
+            return;
+          }
+        } catch (e) {
+          console.error("Error comprobando permisos", e);
+        }
+
+        document.getElementById('inactive-screen').style.display = 'none';
+        DOC_REF = db.collection("users").doc(user.uid);
+        document.getElementById('user-avatar').src = user.photoURL || '';
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('app-layout').style.display = 'flex';
+        await hydrateData();
+      } else {
+        CURRENT_USER = null;
+        document.getElementById('inactive-screen').style.display = 'none';
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('app-layout').style.display = 'none';
+        loader.style.display = 'none';
+      }
+    });
+
+    function loginGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).catch(err => alert("Error al iniciar sesión: " + err.message));
+    }
+
+    function logout() {
+      auth.signOut();
+    }
+
+    async function hydrateData() {
+      const loader = document.getElementById('cloud-loading');
+      const retryBtn = document.getElementById('retry-btn');
+      loader.style.display = 'flex';
+
+      const failTimer = setTimeout(() => {
+        if (retryBtn) retryBtn.style.display = 'inline-flex';
+        showToast("Firebase no responde. Posible problema de red.", "error");
+      }, 5000);
+
+      try {
+        const docSnap = await DOC_REF.get();
+        if (docSnap.exists) {
+          const saved = docSnap.data();
+          if (saved.medicenter) APP_STATE.medicenter = saved.medicenter;
+          if (saved.vinamed) APP_STATE.vinamed = saved.vinamed;
+        } else {
+          const oldRef = db.collection("app_data").doc("datos_globales");
+          const oldSnap = await oldRef.get();
+          if (oldSnap.exists) {
+            const oldData = oldSnap.data();
+            await DOC_REF.set(oldData);
+            if (oldData.medicenter) APP_STATE.medicenter = oldData.medicenter;
+            if (oldData.vinamed) APP_STATE.vinamed = oldData.vinamed;
+            showToast("Datos migrados exitosamente.", "ok");
+          }
+        }
+
+        // Asegurar estructura con los mapeos oficiales del HIS por defecto
+        if (!APP_STATE.medicenter.settings.columnMap) APP_STATE.medicenter.settings.columnMap = clone(DEFAULT_MAP);
+        if (!APP_STATE.vinamed.settings.columnMap) APP_STATE.vinamed.settings.columnMap = clone(DEFAULT_MAP);
+        if (!APP_STATE.medicenter.settings.workDays) APP_STATE.medicenter.settings.workDays = [1, 2, 3, 4, 5, 6];
+        if (!APP_STATE.vinamed.settings.workDays) APP_STATE.vinamed.settings.workDays = [1, 2, 3, 4, 5, 6];
+
+      } catch (error) {
+        console.error("Error conectando a Firebase:", error);
+        showToast("Trabajando sin conexión profunda.", "error");
+      }
+
+      clearTimeout(failTimer);
+      loader.style.display = 'none';
+
+      APP_STATE.selectedMonth = currentMonth();
+      UI.monthSelectorInput.value = APP_STATE.selectedMonth;
+      switchWorkspace('medicenter');
+      bindEvents();
+    }
+
+    async function persist() {
+      if (!CURRENT_USER) return;
+      try {
+        const cleanData = JSON.parse(JSON.stringify({ medicenter: APP_STATE.medicenter, vinamed: APP_STATE.vinamed }));
+        await DOC_REF.set(cleanData);
+      } catch (error) {
+        console.error("Error guardando en la nube:", error);
+        if (isOffline) showToast("Guardado localmente. Se subirá al volver internet.", "warn");
+      }
+    }
+
+    // ==== UTILIDADES UX (TOASTS, OFFLINE) ====
+    window.addEventListener('offline', () => { isOffline = true; document.getElementById('offline-banner').style.display = 'block'; });
+    window.addEventListener('online', () => { isOffline = false; document.getElementById('offline-banner').style.display = 'none'; persist(); showToast("Conexión restaurada. Sincronizado.", "ok"); });
+
+    function showToast(msg, type = "ok") {
+      const c = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = `toast`;
+      t.style.backgroundColor = type === 'error' ? 'var(--red)' : (type === 'warn' ? 'var(--amber)' : 'var(--teal)');
+      t.innerHTML = msg;
+      c.appendChild(t);
+      setTimeout(() => t.remove(), 3500);
+    }
+
+    // ==== NAVEGACIÓN Y TABS ====
+    function switchWorkspace(workspace) {
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      const targetNav = document.getElementById('nav-' + workspace);
+      if (targetNav) targetNav.classList.add('active');
+
+      const header = document.getElementById('workspace-header');
+      const subnav = document.getElementById('subnav');
+
+      if (workspace === 'config') {
+        header.style.display = 'none'; subnav.style.display = 'none';
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.getElementById('view-config').classList.add('active');
+        document.getElementById('config-center-select').value = APP_STATE.activeWorkspace;
+        renderConfig();
+      } else {
+        header.style.display = 'flex'; subnav.style.display = 'flex';
+        APP_STATE.activeWorkspace = workspace;
+
+        if (UI.wsTitle) {
+          UI.wsTitle.textContent = workspace === 'medicenter' ? 'MediCenter' : 'ViñaMed';
+        }
+
+        const wsData = APP_STATE[workspace];
+        UI.percentInput.value = wsData.settings.percent;
+        UI.workDateInput.value = wsData.currentSummary ? wsData.currentSummary.workDate : todayISO();
+        renderAll();
+        switchSubTab(APP_STATE.activeSubTab);
+      }
+    }
+
+    function switchSubTab(tabId) {
+      APP_STATE.activeSubTab = tabId;
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.btn-subnav').forEach(el => el.classList.remove('active'));
+      document.getElementById('view-' + tabId).classList.add('active');
+      document.getElementById('subnav-' + tabId).classList.add('active');
+      if (tabId === 'history') renderMonthlyOverview();
+    }
+
+    const getState = () => APP_STATE[APP_STATE.activeWorkspace];
+
+    function bindEvents() {
+      UI.zone.addEventListener('dragover', e => { e.preventDefault(); });
+      UI.zone.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]) });
+      UI.fileInput.addEventListener('change', e => { if (e.target.files[0]) processFile(e.target.files[0]) });
+      UI.percentInput.addEventListener('input', () => { const v = sanitizePercent(UI.percentInput.value, getState().settings.percent); UI.percentInput.value = v; renderCurrentSummary() });
+      document.getElementById('settings-month-goal').addEventListener('input', () => { if (APP_STATE.activeSubTab === 'history') renderMonthlyOverview(); });
+      UI.monthSelectorInput.addEventListener('change', () => { APP_STATE.selectedMonth = UI.monthSelectorInput.value || currentMonth(); renderMonthlyOverview(); renderHistory(); });
+      document.getElementById('save-settings-btn').addEventListener('click', saveSettingsFromPanel);
+      document.getElementById('add-rule-btn').addEventListener('click', addRuleCard);
+      document.getElementById('restore-defaults-btn').addEventListener('click', restoreDefaultRules);
+      document.getElementById('export-month-xlsx-btn').addEventListener('click', exportMonthXlsxDetail);
+    }
+
+    function changeDay(offset) {
+      const currentVal = UI.workDateInput.value || todayISO();
+      const d = new Date(currentVal + 'T12:00:00');
+      d.setDate(d.getDate() + offset);
+      UI.workDateInput.value = d.toISOString().split('T')[0];
+      loadDataForCurrentDate();
+    }
+
+    function loadDataForCurrentDate() {
+      const dateToLoad = UI.workDateInput.value;
+      if (!dateToLoad) return;
+      const ws = getState();
+      const entry = ws.history.find(e => e.workDate === dateToLoad);
+
+      if (entry) {
+        ws.currentSummary = entry; ws.currentRows = entry.rows; ws.currentDiscardStats = entry.discardStats || emptyDiscardStats(); ws.currentFileName = entry.fileName; UI.percentInput.value = entry.paymentPercent;
+      } else {
+        ws.currentSummary = null; ws.currentRows = []; ws.currentDiscardStats = emptyDiscardStats(); ws.currentFileName = ''; UI.percentInput.value = ws.settings.percent;
+      }
+
+      const newMonth = monthFromDate(dateToLoad);
+      if (APP_STATE.selectedMonth !== newMonth) {
+        APP_STATE.selectedMonth = newMonth; UI.monthSelectorInput.value = newMonth; renderMonthlyOverview(); renderHistory();
+      }
+      renderCurrentSummary(); renderDiscards();
+    }
+
+    function renderAll() { renderCurrentSummary(); renderMonthlyOverview(); renderDiscards(); renderHistory(); }
+
+    // ==== CONFIGURACIÓN Y REGLAS ====
+    function getConfigState() { return APP_STATE[document.getElementById('config-center-select').value]; }
+
+    function renderConfig() {
+      const confState = getConfigState();
+      document.getElementById('settings-default-percent').value = confState.settings.percent;
+      document.getElementById('settings-month-goal').value = confState.settings.monthlyGoal || 0;
+
+      document.getElementById('map-estado').value = confState.settings.columnMap.estado || 'estado';
+      document.getElementById('map-paciente').value = confState.settings.columnMap.paciente || 'paciente';
+      document.getElementById('map-examen').value = confState.settings.columnMap.examen || 'examen';
+      document.getElementById('map-fecha').value = confState.settings.columnMap.fecha || 'fecha';
+
+      document.querySelectorAll('.wd-chk').forEach(chk => { chk.checked = (confState.settings.workDays || [1, 2, 3, 4, 5, 6]).includes(Number(chk.value)); });
+
+      renderRules(confState);
+    }
+
+    function renderRules(confState) {
+      const c = document.getElementById('rules-container'); const rules = confState ? confState.settings.priceRules : getConfigState().settings.priceRules;
+      if (!rules.length) { c.innerHTML = `<div class="empty">Sin reglas.</div>`; return }
+      c.innerHTML = rules.map(r => `<div class="rule" data-rule-id="${r.id}"><div class="rule-grid"><div class="field"><label>Variantes</label><input type="text" data-field="aliases" value="${escapeAttribute(r.aliases)}" /></div><div class="field"><label>Categoría</label><input type="text" data-field="label" value="${escapeAttribute(r.label)}" /></div><div class="field"><label>Valor base ($)</label><input type="number" min="0" step="10" data-field="base" value="${Number(r.base) || 0}" /></div><button class="btn-danger" type="button" onclick="removeRule('${r.id}')">Eliminar</button></div></div>`).join('') + `<div class="row"><button class="btn" type="button" onclick="saveRules()">Guardar Reglas</button></div>`
+    }
+
+    async function saveSettingsFromPanel() {
+      const confState = getConfigState();
+      confState.settings.percent = sanitizePercent(document.getElementById('settings-default-percent').value, 100);
+      confState.settings.monthlyGoal = sanitizeMoney(document.getElementById('settings-month-goal').value, 0);
+
+      const chks = document.querySelectorAll('.wd-chk:checked');
+      confState.settings.workDays = Array.from(chks).map(c => Number(c.value));
+
+      confState.settings.columnMap = {
+        estado: document.getElementById('map-estado').value.trim() || 'estado',
+        paciente: document.getElementById('map-paciente').value.trim() || 'paciente',
+        examen: document.getElementById('map-examen').value.trim() || 'examen',
+        fecha: document.getElementById('map-fecha').value.trim() || 'fecha'
+      };
+
+      await persist(); showToast("Ajustes y Mapeo guardados exitosamente.");
+    }
+
+    function addRuleCard() { getConfigState().settings.priceRules.push({ id: uid(), aliases: '', label: 'Nuevo', base: 0 }); renderRules(); }
+    function removeRule(ruleId) { const confState = getConfigState(); confState.settings.priceRules = confState.settings.priceRules.filter(r => r.id !== ruleId); renderRules(); }
+    async function saveRules() {
+      const confState = getConfigState(); const cards = Array.from(document.querySelectorAll('[data-rule-id]'));
+      confState.settings.priceRules = cards.map(card => ({ id: card.dataset.ruleId, aliases: card.querySelector('[data-field="aliases"]').value.trim(), label: card.querySelector('[data-field="label"]').value.trim(), base: sanitizeMoney(card.querySelector('[data-field="base"]').value, 0) })).filter(r => r.aliases && r.label);
+      await persist(); renderRules(); showToast("Diccionario actualizado.");
+    }
+
+    async function restoreDefaultRules() {
+      const confState = getConfigState(); const isMedicenter = document.getElementById('config-center-select').value === 'medicenter';
+      confState.settings.priceRules = clone(isMedicenter ? DEFAULT_RULES_N1 : DEFAULT_RULES_N2);
+      await persist(); renderRules(); showToast("Reglas por defecto restauradas.");
+    }
+
+    // ==== PROCESAMIENTO Y LIMPIEZA ====
+    function processFile(file) {
+      document.getElementById('upload-feedback').innerHTML = '';
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (ext === 'csv') { Papa.parse(file, { skipEmptyLines: false, complete: r => handleMatrix(r.data, file.name) }); }
+      else if (ext === 'xlsx' || ext === 'xls') {
+        const reader = new FileReader();
+        reader.onload = e => {
+          try {
+            const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array', raw: true });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            handleMatrix(XLSX.utils.sheet_to_json(ws, { header: 1, defval: '', raw: true }), file.name);
+          } catch (error) { showToast("Error leyendo Excel", "error"); }
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    }
+
+    // ESTA ES LA FUNCIÓN CLAVE QUE BORRA TILDES Y ESPACIOS
+    function normalizeStr(s) {
+      return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
+    }
+
+    function findHeaderRow(matrix, map) {
+      const limit = Math.min(matrix.length, 15);
+      const targetP = normalizeStr(map.paciente);
+      const targetE = normalizeStr(map.examen);
+      for (let i = 0; i < limit; i++) {
+        const row = (matrix[i] || []).map(normalizeStr);
+        if (row.some(c => c.includes(targetP)) && row.some(c => c.includes(targetE))) return i;
+      }
+      return 0;
+    }
+
+    function handleMatrix(matrix, fileName) {
+      const ws = APP_STATE[APP_STATE.activeWorkspace]; const map = ws.settings.columnMap;
+
+      const headerIndex = findHeaderRow(matrix, map);
+      const headers = (matrix[headerIndex] || []).map(normalizeStr);
+
+      const tEst = normalizeStr(map.estado);
+      const tPac = normalizeStr(map.paciente);
+      const tExa = normalizeStr(map.examen);
+
+      const idx = {
+        estado: headers.findIndex(h => h.includes(tEst)),
+        paciente: headers.findIndex(h => h.includes(tPac)),
+        examen: headers.findIndex(h => h.includes(tExa))
+      };
+
+      if (idx.estado === -1 || idx.paciente === -1 || idx.examen === -1) {
+        showToast("Error. Leí estas columnas: " + headers.slice(0, 5).join(', '), "error");
+        return;
+      }
+
+      const processed = []; let disc = { state: 0, missing: 0, empty: 0, details: [] };
+      const rules = compileRules(ws.settings.priceRules);
+
+      matrix.slice(headerIndex + 1).forEach((row, i) => {
+        if (!row || !row.some(cell => String(cell || '').trim() !== '')) { disc.empty++; return; }
+        if (!row[idx.paciente] || !row[idx.examen]) { disc.missing++; return; }
+
+        // AQUÍ ESTÁ LA CORRECCIÓN: Limpiamos la tilde de "Atención"
+        const estadoLimpio = normalizeStr(row[idx.estado]);
+        if (!estadoLimpio.includes('fin de atencion')) {
+          disc.state++;
+          disc.details.push({ rowNumber: headerIndex + i + 2, reason: 'No finalizado', paciente: row[idx.paciente], examenRaw: row[idx.examen], estado: row[idx.estado] });
+          return;
+        }
+
+        const examenRaw = String(row[idx.examen]).trim();
+        const paciente = String(row[idx.paciente]).trim();
+        const resolved = resolveExam(examenRaw, rules);
+
+        processed.push({ paciente: paciente, examenRaw: examenRaw, label: resolved.label, base: resolved.base, matched: resolved.matched });
+      });
+
+      const paymentPercent = sanitizePercent(UI.percentInput.value, ws.settings.percent);
+      let summary = buildSessionSummary(processed, fileName, UI.workDateInput.value, paymentPercent, disc);
+
+      const duplicate = ws.history.find(e => e.workDate === summary.workDate);
+      if (duplicate) {
+        const sumar = window.confirm(`Ya hay un archivo guardado para el ${prettyDate(summary.workDate)}.\n\n¿Deseas SUMAR estos nuevos pacientes a los que ya estaban?\n(Aceptar = Sumar / Cancelar = Reemplazar)`);
+        if (sumar) {
+          const combinedRows = [...duplicate.rows, ...processed];
+          summary = buildSessionSummary(combinedRows, duplicate.fileName + ' + ' + fileName, summary.workDate, paymentPercent, disc);
+        }
+        ws.history = ws.history.filter(e => e.id !== duplicate.id);
+      }
+
+      ws.history.push(summary);
+      ws.currentSummary = summary; ws.currentRows = summary.rows; ws.currentDiscardStats = disc; ws.currentFileName = fileName;
+      persist(); renderAll(); showToast("✓ Procesado exitosamente.", "ok");
+    }
+
+    function renderCurrentSummary() {
+      const s = getState().currentSummary; const tbody = document.getElementById('daily-detail-tbody');
+      const banner = document.getElementById('unmatched-banner');
+      const searchInput = document.getElementById('daily-search').value.toLowerCase().trim();
+
+      document.getElementById('daily-title-display').textContent = 'Resumen: ' + (UI.workDateInput.value ? prettyDate(UI.workDateInput.value) : 'Hoy');
+
+      if (!s) {
+        setText('daily-patients', '0'); setText('daily-base', '$0'); setText('daily-payment', '$0'); setText('daily-top-exam', '-'); setText('daily-payment-copy', `Aplica ${formatPercent(sanitizePercent(UI.percentInput.value, getState().settings.percent))}`);
+        tbody.innerHTML = `<tr><td colspan="4"><div class="empty">Carga un archivo para procesar este día.</div></td></tr>`;
+        banner.style.display = 'none'; return;
+      }
+
+      const p = sanitizePercent(UI.percentInput.value, getState().settings.percent); const dyn = s.totalBase * p / 100; const top = s.sortedExams[0];
+      setText('daily-patients', String(s.rows.length)); setText('daily-base', fmtCLP(s.totalBase)); setText('daily-payment', fmtCLP(dyn)); setText('daily-top-exam', top ? top.label : '-'); setText('daily-payment-copy', `Archivo: ${s.fileName}`);
+
+      if (s.rows.length) {
+        let displayRows = s.rows;
+        if (searchInput) displayRows = displayRows.filter(r => r.paciente.toLowerCase().includes(searchInput) || r.examenRaw.toLowerCase().includes(searchInput) || r.label.toLowerCase().includes(searchInput));
+        if (displayRows.length > 0) tbody.innerHTML = displayRows.map(r => `<tr><td>${escapeHtml(r.paciente)}</td><td>${escapeHtml(r.examenRaw)}</td><td>${escapeHtml(r.label)}</td><td>${fmtCLP(calcPayment(r.base, p))}</td></tr>`).join('');
+        else tbody.innerHTML = `<tr><td colspan="4"><div class="empty">No hay resultados.</div></td></tr>`;
+      } else tbody.innerHTML = `<tr><td colspan="4"><div class="empty">No hay pacientes válidos.</div></td></tr>`;
+
+      if (s.unmatchedEntries && s.unmatchedEntries.length) {
+        banner.style.display = 'block';
+        document.getElementById('unmatched-count').textContent = s.unmatchedEntries.reduce((acc, e) => acc + e.count, 0);
+      } else { banner.style.display = 'none'; }
+    }
+
+    function renderMonthlyOverview() {
+      const ws = getState(); const month = APP_STATE.selectedMonth || currentMonth(); const entries = getEntriesForMonth(month); const totals = summarizeMonth(entries); const goal = sanitizeMoney(ws.settings.monthlyGoal, 0); const projection = projectMonth(totals.totalPayment, entries.length, month);
+
+      setText('month-total', fmtCLP(totals.totalPayment)); setText('month-days', String(entries.length)); setText('month-goal-gap', fmtCLP(projection)); setText('month-total-copy', goal > 0 ? `Meta: ${fmtCLP(goal)}` : `Bruto: ${fmtCLP(totals.totalBase)}`); setText('month-average-copy', `Promedio: ${fmtCLP(entries.length ? totals.totalPayment / entries.length : 0)} /día`); setText('month-projection-copy', goal > 0 && goal > totals.totalPayment ? `Faltan ${fmtCLP(goal - totals.totalPayment)}` : `Proyección fin de mes`); setText('month-days-chip', `${entries.length} día(s)`);
+
+      if (UI.wsBadge) {
+        const progress = goal > 0 ? Math.min(100, Math.round((totals.totalPayment / goal) * 100)) : 0;
+        UI.wsBadge.textContent = `Meta: ${progress}%`;
+      }
+
+      renderMonthChart(totals.sortedExams); renderMissingDays(entries, month);
+
+      const breakdownTbody = document.getElementById('month-breakdown-tbody');
+      if (!totals.sortedExams.length) {
+        breakdownTbody.innerHTML = `<tr><td colspan="3"><div class="empty">Sin datos financieros este mes.</div></td></tr>`;
+      } else {
+        breakdownTbody.innerHTML = totals.sortedExams.map(ex => `<tr><td>${escapeHtml(ex.label)}</td><td>${ex.count}</td><td style="color:var(--teal); font-weight:600;">${fmtCLP(ex.payment)}</td></tr>`).join('');
+      }
+    }
+
+    function renderMonthChart(sortedExams) {
+      const top = sortedExams.slice(0, 6); const colors = ['#0d7c6e', '#12998a', '#0a5f55', '#17b49d', '#c9820a', '#f0a62e'];
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(document.getElementById('month-chart'), { type: 'bar', data: { labels: top.map(i => i.label.substring(0, 12) + '.'), datasets: [{ data: top.map(i => i.payment), backgroundColor: colors }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { font: { family: 'DM Sans', size: 10 } } }, y: { ticks: { font: { family: 'DM Mono', size: 10 } } } } } });
+    }
+
+    function renderDiscards() {
+      const s = getState().currentDiscardStats || emptyDiscardStats();
+      setText('discard-chip', `${s.state + s.missing + s.empty} descartadas`); setText('discard-state', String(s.state)); setText('discard-missing', String(s.missing)); setText('discard-empty', String(s.empty));
+      const tbody = document.getElementById('discard-tbody'); if (!s.details.length) { tbody.innerHTML = `<tr><td colspan="5"><div class="empty">No hay descartes en el último archivo.</div></td></tr>`; return }
+      tbody.innerHTML = s.details.map(i => `<tr><td>${i.rowNumber}</td><td><span class="pill warn">${escapeHtml(i.reason)}</span></td><td>${escapeHtml(i.estado || '-')}</td><td>${escapeHtml(i.paciente || '-')}</td><td>${escapeHtml(i.examenRaw || '-')}</td></tr>`).join('')
+    }
+
+    function renderHistory() {
+      const tbody = document.getElementById('history-tbody'); const entries = getEntriesForMonth(APP_STATE.selectedMonth);
+      if (!entries.length) { tbody.innerHTML = `<tr><td colspan="5"><div class="empty">No hay días guardados este mes.</div></td></tr>`; return }
+      tbody.innerHTML = entries.slice().sort((a, b) => b.workDate.localeCompare(a.workDate)).map(e => `<tr><td>${prettyDate(e.workDate)}</td><td>${escapeHtml(e.fileName)}</td><td>${e.totalRows}</td><td>${fmtCLP(e.totalPayment)}</td><td style="display:flex; gap:0.3rem;"><button class="btn-ghost" onclick="loadHistoryEntry('${e.id}')">Ver</button><button class="btn-danger" onclick="deleteHistoryEntry('${e.id}')">🗑️</button></td></tr>`).join('')
+    }
+
+    function renderMissingDays(entries, month) {
+      const list = document.getElementById('missing-days-list'); const missing = computeMissingDates(entries, month);
+      if (!entries.length) { list.innerHTML = `<div class="empty">Carga un día para ver faltantes.</div>`; return }
+      list.innerHTML = missing.length ? missing.map(prettyDate).join(', ') : 'Todo al día según tu horario.';
+    }
+
+    // ==== ACCIONES DE HISTORIAL ====
+    async function deleteHistoryEntry(id) {
+      if (!window.confirm('¿Borrar los datos de este día en la nube?')) return;
+      const ws = getState(); ws.history = ws.history.filter(e => e.id !== id);
+      if (ws.currentSummary && ws.currentSummary.id === id) { ws.currentSummary = null; ws.currentRows = []; }
+      await persist(); renderAll(); showToast("Día borrado.", "ok");
+    }
+
+    let pendingDeleteAction = null;
+    function confirmDeleteMonth() {
+      const month = prettyMonth(APP_STATE.selectedMonth);
+      document.getElementById('confirm-text').textContent = `Se eliminarán permanentemente los registros de ${month}.`;
+      document.getElementById('confirm-modal').style.display = 'flex';
+      pendingDeleteAction = async () => {
+        const ws = getState();
+        ws.history = ws.history.filter(e => monthFromDate(e.workDate) !== APP_STATE.selectedMonth);
+        await persist(); renderAll(); closeModal(); showToast("Mes borrado completamente.");
+      };
+    }
+    function closeModal() { document.getElementById('confirm-modal').style.display = 'none'; pendingDeleteAction = null; }
+    document.getElementById('confirm-yes-btn').addEventListener('click', () => { if (pendingDeleteAction) pendingDeleteAction(); });
+
+    function exportMonthXlsxDetail() {
+      const entries = getEntriesForMonth(APP_STATE.selectedMonth); if (!entries.length) return; const detailRows = [];
+      entries.sort((a, b) => a.workDate.localeCompare(b.workDate)).forEach(entry => { entry.rows.forEach(r => { detailRows.push({ "Fecha Atención": prettyDate(entry.workDate), "Paciente": r.paciente, "Examen Original": r.examenRaw, "Categoría Asignada": r.label, "Valor Base": r.base, "Porcentaje Aplicado": formatPercent(entry.paymentPercent), "A Pago": calcPayment(r.base, entry.paymentPercent) }); }); });
+      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(detailRows), 'Detalle Pacientes');
+      XLSX.writeFile(wb, `ecometricas-${APP_STATE.activeWorkspace}-${APP_STATE.selectedMonth || currentMonth()}.xlsx`);
+    }
+
+    async function exportMonthlyPDF() {
+      const { jsPDF } = window.jspdf; const doc = new jsPDF('p', 'mm', 'a4');
+      const target = document.getElementById('pdf-export-area');
+      const canvas = await html2canvas(target, { scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+      doc.setFontSize(20); doc.text(`Reporte Mensual - ${UI.wsTitle.textContent}`, 15, 20);
+      doc.setFontSize(12); doc.text(`Mes: ${prettyMonth(APP_STATE.selectedMonth)}`, 15, 30);
+      const imgProps = doc.getImageProperties(imgData);
+      const pdfWidth = doc.internal.pageSize.getWidth() - 30;
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      doc.addImage(imgData, 'PNG', 15, 40, pdfWidth, pdfHeight);
+      doc.save(`Reporte_${APP_STATE.activeWorkspace}_${APP_STATE.selectedMonth}.pdf`);
+      showToast("PDF Generado exitosamente");
+    }
+
+    // ==== HELPERS Y CÁLCULOS ====
+    function getEntriesForMonth(month) { return getState().history.filter(e => monthFromDate(e.workDate) === month) }
+    function summarizeMonth(entries) {
+      const examStats = {}; let totalBase = 0, totalPayment = 0, totalRows = 0;
+      entries.forEach(e => {
+        totalBase += e.totalBase; totalPayment += e.totalPayment; totalRows += e.totalRows;
+        e.rows.forEach(r => {
+          if (r.matched) {
+            if (!examStats[r.label]) examStats[r.label] = { count: 0, base: 0, payment: 0 };
+            examStats[r.label].count += 1; examStats[r.label].base += r.base; examStats[r.label].payment += calcPayment(r.base, e.paymentPercent);
+          }
+        })
+      });
+      return { totalBase, totalPayment, totalRows, sortedExams: Object.entries(examStats).sort((a, b) => b[1].payment - a[1].payment).map(e => ({ label: e[0], count: e[1].count, base: e[1].base, payment: e[1].payment })) }
+    }
+    function buildSessionSummary(rows, fileName, workDate, paymentPercent, discardStats) { const totalBase = rows.reduce((s, r) => s + r.base, 0); const totalPayment = rows.reduce((s, r) => s + calcPayment(r.base, paymentPercent), 0); const examFrequency = {}; const unmatchedMap = {}; rows.forEach(r => { if (r.matched) examFrequency[r.label] = (examFrequency[r.label] || 0) + 1; else unmatchedMap[r.examenRaw] = (unmatchedMap[r.examenRaw] || 0) + 1 }); const sortedExams = Object.entries(examFrequency).sort((a, b) => b[1] - a[1]).map(e => ({ label: e[0], count: e[1] })); const unmatchedEntries = Object.entries(unmatchedMap).sort((a, b) => b[1] - a[1]).map(e => ({ label: e[0], count: e[1] })); return { id: uid(), fileName, workDate, paymentPercent, totalBase, totalPayment, totalRows: rows.length, rows, sortedExams, unmatchedEntries, discardStats } }
+    function projectMonth(totalPayment, dayCount, month) { if (!dayCount) return 0; const [year, monthNumber] = month.split('-').map(Number); const daysInMonth = new Date(year, monthNumber, 0).getDate(); const cutoff = month === currentMonth() ? new Date().getDate() : daysInMonth; return (totalPayment / dayCount) * cutoff; }
+    function computeMissingDates(entries, month) {
+      const [year, monthNumber] = month.split('-').map(Number); if (!year || !monthNumber) return [];
+      const lastDay = month === currentMonth() ? new Date().getDate() : new Date(year, monthNumber, 0).getDate();
+      const loaded = new Set(entries.map(e => e.workDate)); const missing = []; const workDays = getState().settings.workDays || [1, 2, 3, 4, 5, 6];
+      for (let day = 1; day <= lastDay; day++) {
+        const date = `${year}-${String(monthNumber).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const jsDate = new Date(`${date}T12:00:00`);
+        if (!workDays.includes(jsDate.getDay())) continue;
+        if (!loaded.has(date)) missing.push(date);
+      }
+      return missing;
+    }
+
+    function compileRules(rules) { return rules.map(r => ({ ...r, regex: new RegExp(r.aliases.split('|').map(a => String(a).trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).filter(Boolean).join('|'), 'i') })) }
+    function resolveExam(name, rules) { const n = String(name).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase(); for (const r of rules) { if (r.regex.test(n)) return { label: r.label, base: Number(r.base) || 0, matched: true } } return { label: 'Sin tarifa', base: 0, matched: false } }
+    function escapeAttribute(v) { return escapeHtml(v).replace(/"/g, '&quot;') }
+    function escapeHtml(v) { return String(v || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
+    function todayISO() { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}` }
+    function currentMonth() { return todayISO().slice(0, 7) }
+    function monthFromDate(v) { return String(v || '').slice(0, 7) }
+    function sanitizePercent(v, f) { const n = Number(v); return Number.isFinite(n) ? Math.min(100, Math.max(0, n)) : f }
+    function sanitizeMoney(v, f) { const n = Number(v); return Number.isFinite(n) ? Math.max(0, Math.round(n)) : f }
+    function calcPayment(base, percent) { return Math.round((Number(base) || 0) * sanitizePercent(percent, 100) / 100) }
+    function fmtCLP(v) { return '$' + Math.round(Number(v) || 0).toLocaleString('es-CL') }
+    function formatPercent(v) { return `${Number(v).toLocaleString('es-CL', { maximumFractionDigits: 1 })}%` }
+    function prettyDate(s) { if (!s) return '-'; const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric' }) }
+    function prettyMonth(s) { if (!s) return ''; const [y, m] = s.split('-').map(Number); return new Date(y, m - 1, 1).toLocaleDateString('es-CL', { month: 'long', year: 'numeric' }) }
+    function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+  </script>
+</body>
+
+</html>
