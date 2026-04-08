@@ -1501,14 +1501,16 @@
 
     // ==== SISTEMA DE AUTH, LISTA BLANCA Y MIGRACIÓN ====
     // Simulamos un usuario para que las referencias a base de datos no fallen
-    const CURRENT_USER = { uid: "revisor_temporal", email: "revisor@ecometricas.cl", photoURL: "" };
-    const DOC_REF = db.collection("users").doc(CURRENT_USER.uid);
+    CURRENT_USER = { uid: "revisor_temporal", email: "revisor@ecometricas.cl", photoURL: "" };
+    DOC_REF = db.collection("users").doc(CURRENT_USER.uid);
     
     // Ocultar loaders inmediatamente
     setTimeout(() => {
       const loader = document.getElementById('cloud-loading');
       if(loader) loader.style.display = 'none';
-      if(typeof hydrateData === 'function') hydrateData();
+      try {
+        if(typeof hydrateData === 'function') hydrateData();
+      } catch(e) { console.warn("Error en hidratación de datos:", e); }
     }, 100);
 
     // ==== SISTEMA DE AUTH DESHABILITADO PARA REVISIÓN ====
