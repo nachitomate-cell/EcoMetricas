@@ -1,0 +1,24 @@
+{
+  "name": "ecometricas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "dev": "vite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nachitomate-cell/EcoMetricas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/nachitomate-cell/EcoMetricas/issues"
+  },
+  "homepage": "https://github.com/nachitomate-cell/EcoMetricas#readme",
+  "devDependencies": {
+    "vite": "^8.0.8"
+  }
+}
